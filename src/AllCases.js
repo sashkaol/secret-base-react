@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { CaseBook, CaseList, Overlay } from './styles/styles';
+
+import { supabase } from './LogIn';
 
 export function Case({ title, desk }) {
     return (
@@ -11,49 +12,54 @@ export function Case({ title, desk }) {
     )
 }
 
+const fetchData = async () => {
+    let { data: cases, error } = await supabase
+        .from('cases')
+        .select('*')
+    return cases;
+}
+
+const getDataCase = async (param) => {
+    const { data, error } = await supabase
+        .from('cases')
+        .select('*')
+        .eq('ca_id', param)
+    return data
+}
+
 export default function AllCases() {
 
     const [allCases, setAllCases] = useState([]);
     const [cases, setCases] = useState({});
-    // const [id, setId] = useState(0);
-    const [isLoad, setLoad] = useState(false);
 
     useEffect(() => {
-        axios.post('http://localhost:3001/allCases').then(res => setAllCases(res.data));
-        if (allCases.length != 0) setLoad(true);
-        else setLoad(!isLoad);
-        console.log(isLoad);
-    }, [isLoad]);
+        fetchData().then(res => setAllCases(res));
+    }, []);
 
     const getCase = (id) => {
-        axios.post('http://localhost:3001/cases', { id: id }).then(res => setCases(res));
+        getDataCase(id).then(res => setCases(res));
     }
 
     return (
         <div>
             <CaseList>
-                {isLoad &&
+                {
                     allCases.map((el) => (
-                        <CaseBook key={el.id}>
-                            <h3>Дело №{el.id}</h3>
-                            <p>{el.description}</p>
-                            <Overlay onClick={() => getCase(el.id)} />
+                        <CaseBook key={el.ca_id}>
+                            <h3>Дело №{el.ca_id}</h3>
+                            <p>{el.ca_title}</p>
+                            <Overlay onClick={() => getCase(el.ca_id)} />
                         </CaseBook>
                     ))
                 }
             </CaseList>
-            {/* <input type="number" onChange={(e) => {
-                setId(e.target.value);
-            }} />
-            <button onClick={() => { getCase(id) }}>click</button> */}
-            {cases.data &&
-                <Case title={cases.data[0].type_c} desk={cases.data[0].description} />
+            {cases[0] &&
+                <Case title={cases[0].ca_type} desk={cases[0].ca_description} />
             }
             <br />
             {
-                !cases.data && 'Данные не найдены'
+                !cases[0] && 'Данные не найдены'
             }
-
         </div>
     )
 }
