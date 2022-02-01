@@ -6,13 +6,11 @@ import { Menu } from './Menu';
 
 export function App() {
     return (
-        <div>
-            <Routes>
-                <Route exact path="/" element={<Authorization />} />
-                <Route exact path="/allcases" element={<AllCases />} />
-                <Route exact path="/reg" element={<Registration />} />
-                <Route exact path="/menu" element={<Menu />} />
-            </Routes>
-        </div>
+        <Routes>
+            <Route exact path="/" element={<Authorization />} />
+            <Route exact path="/allcases" element={<AllCases />} />
+            <Route exact path="/reg" element={<Registration />} />
+            <Route exact path="/menu" element={<Menu />} />
+        </Routes>
     )
 }
