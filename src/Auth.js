@@ -1,6 +1,6 @@
 import { Input, Btn, Container } from './styles/styles';
 import { supabase } from './SupaBase';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser, removeUser } from './store/slices/userSlice';
 import { useAuth } from './hooks/user-auth';
@@ -39,8 +39,10 @@ export function Authorization() {
                     .then(res => {
                         if (res != 0) {
                             setAuthor(res[0].d_login);
-                            dispatch(setUser({ login: 'sashkaool', id: 2 }));
+                            dispatch(setUser({ login: res[0].d_login, id: res[0].d_id }));
                             console.log(user);
+                            localStorage.setItem('user', res[0].d_login);
+                            localStorage.setItem('id', res[0].d_id);
                         }
                     })
             })
@@ -49,8 +51,8 @@ export function Authorization() {
     return (
         <div>
             {
-                useAuth() ?
-                    <Navigate to='/reg' replace />
+                useAuth().isAuth ?
+                    <Navigate to='/menu' replace />
                     :
                     <Container behav="column" w="250px" gap="20px">
                         <Input id="alogin" placeholder="your login" type="text" />

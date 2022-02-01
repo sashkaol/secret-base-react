@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Input, Btn, Container, Title } from './styles/styles';
 import { supabase } from './SupaBase';
+import { Link } from 'react-router-dom';
 
 var sha512 = require('js-sha512').sha512;
 
@@ -72,7 +73,7 @@ export function Registration() {
                 <Title>Выберите, кого вы хотите зарегистрировать</Title>
                 {
                     people.map(el => (
-                        <Btn h="40px" key={el.pe_id} id={el.pe_id} onClick={() => {
+                        <Btn size="15px" h="40px" key={el.pe_id} id={el.pe_id} onClick={() => {
                             setPeId(el.pe_id);
                         }}>{el.pe_surname} {el.pe_name}</Btn>
                     ))
@@ -109,6 +110,7 @@ export function Registration() {
                 </Container>
                 <Btn w="250px" h="40px" size="15px" onClick={registrate}>Зарегистрировать</Btn>
             </Container>
+            <Btn w="250px" h="40px"><Link to="/menu">Обратно</Link></Btn>
         </Container>
     )
 }

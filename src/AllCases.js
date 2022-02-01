@@ -1,16 +1,8 @@
 import { useState, useEffect } from 'react';
-import { CaseBook, CaseList, Overlay } from './styles/styles';
+import { CaseBook, Overlay, Btn, Container } from './styles/styles';
+import { Link } from 'react-router-dom';
 
 import { supabase } from './SupaBase';
-
-export function Case({ title, desk }) {
-    return (
-        <div>
-            <div>{title}</div>
-            <div>{desk}</div>
-        </div>
-    )
-}
 
 const fetchData = async () => {
     let { data: cases, error } = await supabase
@@ -27,14 +19,13 @@ const getDataCase = async (param) => {
     return data || error
 }
 
-export default function AllCases({ author }) {
+export default function AllCases() {
 
     const [allCases, setAllCases] = useState([]);
     const [cases, setCases] = useState({});
 
     useEffect(() => {
         fetchData().then(res => setAllCases(res));
-        console.log(author);
     }, []);
 
     const getCase = (id) => {
@@ -42,33 +33,21 @@ export default function AllCases({ author }) {
     }
 
     return (
-        <div>
-            {author ?
-                <div>
-                    <p>Вы зашли под именем {author}</p>
-                    <CaseList>
-                        {
-                            allCases.map((el) => (
-                                <CaseBook key={el.ca_id}>
-                                    <h3>Дело №{el.ca_id}</h3>
-                                    <p>{el.ca_title}</p>
-                                    <Overlay onClick={() => getCase(el.ca_id)} />
-                                </CaseBook>
-                            ))
-                        }
-                    </CaseList>
-                </div>
-                : 'Вы не авторизованы и не имеет доступа к данным'
-            }
-
-            {
-                cases[0] &&
-                <Case title={cases[0].ca_type} desk={cases[0].ca_description} />
-            }
-            <br />
-            {
-                !cases[0] && 'Данные не найдены'
-            }
-        </div >
+        <Container behav="row" gap="15px" padd="false">
+            <Container w="400px" behav="row" gap="15px" padd="false">
+                {
+                    allCases.map((el) => (
+                        <CaseBook key={el.ca_id}>
+                            <h3>Дело №{el.ca_id}</h3>
+                            <p>{el.ca_title}</p>
+                            <Overlay onClick={() => getCase(el.ca_id)} />
+                        </CaseBook>
+                    ))
+                }
+            </Container>
+            <Container behav="row" padd="false">
+                <Btn w="250px" h="40px"><Link to="/menu">Обратно</Link></Btn>
+            </Container>
+        </Container>
     )
 }

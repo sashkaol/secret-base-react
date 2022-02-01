@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    login: null,
+    login: localStorage.user,
     token: null,
-    id: null
+    id: localStorage.id
 };
 
 const userSlice = createSlice({

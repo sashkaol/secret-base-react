@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
-export const CaseBook = styled.li`
-    list-style: none;
+export const CaseBook = styled.div`
     width: 150px;
     height: 200px;
     background-color: #F5EEDC;
@@ -15,11 +14,7 @@ export const CaseBook = styled.li`
     position: relative;
     text-align: center;
     box-shadow: 5px 5px 0px 0px rgba(221, 74, 72, 1);
-`;
-export const CaseList = styled.ul`
-    display: flex;
-    gap: 20px;`
-
+`
 export const Overlay = styled.div`
     width: 100%;
     cursor: pointer;
@@ -29,7 +24,7 @@ export const Overlay = styled.div`
     z-index: 100;
     top: 0;
     &:hover {
-        background-color: #eee;
+        background-color: #DD4A48;
     }
 }
 `
@@ -67,6 +62,7 @@ export const Container = styled.div`
     overflow-y: ${props => props.overf ? props.overf : 'visible'};
     height: ${props => props.h ? props.h : 'max-content'};
     padding: ${props => !props.padd ? 0 : '5px'};
+    flex-wrap: wrap;
 `
 export const Title = styled.h4`
     color: #4F091D;
