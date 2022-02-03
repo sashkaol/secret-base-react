@@ -68,7 +68,7 @@ export function Registration() {
     }
 
     return (
-        <Container h="max-content" behav="row" w="100%" gap="50px">
+        <Container h="max-content" behav="row" gap="50px">
             <Container padd="false" w="250px" gap="10px" behav="column" h="initial" overf="scroll">
                 <Title>Выберите, кого вы хотите зарегистрировать</Title>
                 {

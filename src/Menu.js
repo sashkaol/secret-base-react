@@ -12,11 +12,9 @@ export function Menu() {
             {
                 useAuth().isAuth ?
                     <Container w="250px" behav="column" gap="10px">
-                        <Btn w="100%" h="40px"><Link to="/reg">Зарегистрировать детектива</Link></Btn>
-                        <Btn w="100%" h="40px"><Link to="/allcases">Дела</Link></Btn>
+                        <Link to="/reg"><Btn size="15px" w="100%" h="40px">Зарегистрировать детектива</Btn></Link>
+                        <Link to="/allcases"><Btn size="15px" w="100%" h="40px">Дела</Btn></Link>
                         <Btn size="15px" w="100%" h="40px" onClick={() => {
-                            localStorage.removeItem('user');
-                            localStorage.removeItem('id');
                             dispatch(removeUser());
                         }}>Выйти из системы</Btn>
                     </Container>
