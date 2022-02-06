@@ -57,7 +57,7 @@ export function Authorization() {
     }
 
     return (
-        <Container h="250px" behav="column" w="250px" gap="20px">
+        <Container h="250px" as="center" behav="column" w="250px" gap="20px">
             {
                 useAuth().isAuth ?
                     user.rights == 'admin' ?
@@ -68,7 +68,7 @@ export function Authorization() {
                         <Input id="apassw" placeholder="your password" type="password" />
                         <Btn disabled={load} w="250px" h="40px" size="18px" onClick={logIn}>
                             {
-                                load ? <div>Идет загрузка... <Loading>&#8987;</Loading></div> : 'Войти'
+                                load ? <Loading>&#8987;</Loading> : 'Войти'
                             }
                         </Btn>
                     </Container>

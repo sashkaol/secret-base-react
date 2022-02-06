@@ -31,15 +31,17 @@ export const Overlay = styled.div`
 }
 `
 export const Input = styled.input`
-    box-shadow: 3px 3px 0px 0px #DD4A48;
+    box-shadow: ${props => props.readOnly ? '-2px -2px 0px 0px #4F091D' : '3px 3px 0px 0px #DD4A48'};
     background-color: #F5EEDC;
-    color: #DD4A48;
-    width: 100%;
+    color: ${props => props.readOnly ? '#4F091D' : '#DD4A48'};
+    width: ${props => props.w ? props.w : '100%'};
     height: 40px;
     outline: none;
     border: none;
     padding: 7px;
     box-sizing: border-box;
+    font-size: ${props => props.size};
+    cursor: ${props => props.readOnly ? 'default' : 'text'};
 `
 export const Btn = styled.button`
     background-color: ${props => (props.selected ? '#4F091D' : '#DD4A48')};
@@ -65,7 +67,8 @@ export const TextField = styled.div`
     background-color: ${props => props.type ? '#4F091D' : '#F5EEDC' };
     color: ${props => props.type ? '#F5EEDC' : '#4F091D' };
     width: 100%;
-    height: max-content;
+    height: ${props => props.h ? props.h :  'max-content'};
+    min-height: 40px;
     font-size: 16px;
     padding: 10px;
     box-sizing: border-box;
@@ -78,7 +81,11 @@ export const Container = styled.div`
     overflow-y: ${props => props.overf ? props.overf : 'visible'};
     height: ${props => props.h ? props.h : 'max-content'};
     padding: ${props => !props.padd ? 0 : '5px'};
+    justify-content: ${props => props.fe};
+    align-items: ${props => props.at};
+    align-self: ${props => props.as};
     flex-wrap: wrap;
+    flex-grow: ${props => props.g};
 `
 export const Title = styled.h4`
     color: #4F091D;

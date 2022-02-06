@@ -1,0 +1,114 @@
+import { supabase } from './SupaBase';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useAuth } from './hooks/user-auth';
+import { Container, Loading, Input, Btn, TextField, Title } from './styles/styles';
+import { Navigate } from 'react-router-dom';
+
+const getUser = async (id) => {
+    let { data: detective, error } = await supabase
+        .from('detectives')
+        .select('*, people (*)')
+        .eq('d_id', id)
+    return detective || error;
+}
+
+const editData = async (id, obj) => {
+    const { data, error } = await supabase
+        .from('detectives')
+        .update({
+            d_login: obj.d_login,
+            d_email: obj.d_email,
+            d_grade: obj.d_grade,
+            d_rights: obj.d_rights,
+            d_tel: obj.d_tel
+        })
+        .match({ d_id: id })
+    return data || error;
+}
+
+export function Profile() {
+    const user = useSelector((state) => state.user);
+    const [load, setLoad] = useState(true);
+    const [info, setInfo] = useState({});
+    const [edit, setEdit] = useState(false);
+    const [editInfo, setEditInfo] = useState({});
+
+    useEffect(() => {
+        getUser(user.id).then(res => {
+            setInfo(res[0]);
+            setEditInfo({
+                d_login: res[0].d_login,
+                d_email: res[0].d_email,
+                d_tel: res[0].d_tel,
+                d_grade: res[0].d_grade,
+                d_rights: res[0].d_rights
+            })
+            setLoad(false);
+        });
+    }, [load]);
+
+    return (
+        useAuth().isAuth ?
+            <Container behav="row" gap="20px">
+                {
+                    load ?
+                        <Loading>&#8987;</Loading>
+                        :
+                        <Container behav="row" w="780px" gap="10px">
+                            <Container w="250px" gap="5px">
+                                <TextField type="h">Данные профиля</TextField>
+                                <Title>Логин</Title>
+                                <Input readOnly={!edit} value={!edit ? info.d_login : editInfo.d_login} onChange={(e) => {
+                                    setEditInfo({ ...editInfo, d_login: e.target.value });
+                                }} />
+                                <Title>Электронная почта</Title>
+                                <Input readOnly={!edit} value={!edit ? info.d_email : editInfo.d_email} onChange={(e) => {
+                                    setEditInfo({ ...editInfo, d_email: e.target.value });
+                                }} />
+                                <Title>Телефон</Title>
+                                <Input readOnly={!edit} value={!edit ? info.d_tel : editInfo.d_tel} onChange={(e) => {
+                                    setEditInfo({ ...editInfo, d_tel: e.target.value });
+                                }} />
+                                <Title>Звание</Title>
+                                <Input readOnly={info.d_grade == 'kapitan' ? !edit : true} value={!edit ? info.d_grade : editInfo.d_grade} onChange={(e) => {
+                                    setEditInfo({ ...editInfo, d_grade: e.target.value });
+                                }} />
+                                <Title>Права</Title>
+                                <Input readOnly={info.d_rights == 'admin' ? !edit : true} value={!edit ? info.d_rights : editInfo.d_rights} onChange={(e) => {
+                                    setEditInfo({ ...editInfo, d_rights: e.target.value });
+                                }} />
+                                <Btn size="15px" w="250px" h="40px" onClick={() => {
+                                    setEdit(true);
+                                }}>Редактировать</Btn>
+                            </Container>
+                            <Container w="250px" gap="5px">
+                                <TextField type="h">Контактная информация</TextField>
+                                <Title>Полное имя</Title>
+                                <TextField>{info.people.pe_surname} {info.people.pe_name} {info.people.pe_patronymic}</TextField>
+                                <Title>Дата рождения</Title>
+                                <TextField h="40px">{info.people.pe_date_birth}</TextField>
+                                <Title>Адрес</Title>
+                                <TextField>{info.people.pe_address}</TextField>
+                            </Container>
+                            {
+                                edit &&
+                                <Container w="250px" gap="10px">
+                                    <Btn w="120px" h="40px" onClick={() => {
+                                        setEdit(false);
+                                        setEditInfo(info);
+                                    }}>Отменить изменения</Btn>
+                                    <Btn type="submit" w="120px" h="40px" onClick={() => {
+                                        setEdit(false);
+                                        editData(user.id, editInfo);
+                                        setLoad(true);
+                                    }}>Сохранить изменения</Btn>
+                                </Container>
+                            }
+                        </Container>
+                }
+            </Container>
+            :
+            <Navigate to='/' />
+    )
+}

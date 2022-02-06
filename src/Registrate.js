@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Input, Btn, Container, Title } from './styles/styles';
+import { Input, Btn, Container, Title, Loading } from './styles/styles';
 import { supabase } from './SupaBase';
-import { Link } from 'react-router-dom';
 
 var sha512 = require('js-sha512').sha512;
 
@@ -49,15 +48,20 @@ export function Registration() {
     const [grade, setGrade] = useState('');
     const [rights, setRights] = useState('');
     const [peId, setPeId] = useState('');
+    const [load, setLoad] = useState(true);
     const [selected, setSelected] = useState({
         first: false,
         sec: true
     });
+    const [selectPeople, setSelectPeople] = useState('');
     const [people, setPeople] = useState([]);
 
     useEffect(() => {
         getDets().then(res => {
-            getPeople(res).then(res => setPeople(res))
+            getPeople(res).then(res => {
+                setPeople(res);
+                setLoad(false);
+            })
         });
     }, []);
 
@@ -72,11 +76,17 @@ export function Registration() {
             <Container padd="false" w="250px" gap="10px" behav="column" h="initial" overf="scroll">
                 <Title>Выберите, кого вы хотите зарегистрировать</Title>
                 {
-                    people.map(el => (
-                        <Btn size="15px" h="40px" key={el.pe_id} id={el.pe_id} onClick={() => {
-                            setPeId(el.pe_id);
-                        }}>{el.pe_surname} {el.pe_name}</Btn>
-                    ))
+                    !load ?
+                        people.map(el => (
+                            <Btn selected={selectPeople == el.pe_id} size="15px" h="40px" key={el.pe_id} id={el.pe_id} onClick={() => {
+                                setPeId(el.pe_id);
+                                setSelectPeople(el.pe_id);
+                            }}>{el.pe_surname} {el.pe_name}</Btn>
+                        ))
+                        :
+                        <Container fe="center">
+                            <Loading>&#8987;</Loading>
+                        </Container>
                 }
             </Container>
             <Container w="250px" gap="20px" behav="column">
@@ -110,7 +120,6 @@ export function Registration() {
                 </Container>
                 <Btn w="250px" h="40px" size="15px" onClick={registrate}>Зарегистрировать</Btn>
             </Container>
-            <Btn w="250px" h="40px"><Link to="/menu">Обратно</Link></Btn>
         </Container>
     )
 }
