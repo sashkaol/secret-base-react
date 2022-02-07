@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAuth } from './hooks/user-auth';
 import { Container, Loading, Input, Btn, TextField, Title, HighContainer } from './styles/styles';
-import { Navigate, NavLink } from 'react-router-dom';
+import { Navigate, NavLink, useParams } from 'react-router-dom';
 
 const getUser = async (id) => {
     let { data: detective, error } = await supabase
@@ -28,6 +28,8 @@ const editData = async (id, obj) => {
 }
 
 export function Profile() {
+    const params = useParams();
+    const idP = params.id;
     const user = useSelector((state) => state.user);
     const [load, setLoad] = useState(true);
     const [info, setInfo] = useState({});
@@ -35,7 +37,7 @@ export function Profile() {
     const [editInfo, setEditInfo] = useState({});
 
     useEffect(() => {
-        getUser(user.id).then(res => {
+        getUser(idP).then(res => {
             setInfo(res[0]);
             setEditInfo({
                 d_login: res[0].d_login,
@@ -104,7 +106,7 @@ export function Profile() {
                                             }}>Отменить изменения</Btn>
                                             <Btn type="submit" w="120px" h="40px" onClick={() => {
                                                 setEdit(false);
-                                                editData(user.id, editInfo);
+                                                editData(idP, editInfo);
                                                 setLoad(true);
                                             }}>Сохранить изменения</Btn>
                                         </Container>

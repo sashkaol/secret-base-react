@@ -70,7 +70,7 @@ export function Card() {
             !load ?
                 <HighContainer>
                     <Container gap="20px">
-                        <Container overf="scroll" padd behav="column" w="255px" gap="5px">
+                        <Container behav="column" w="255px" gap="5px">
                             <TextField type="h">Контактная информация</TextField>
                             <Title>Полное имя</Title>
                             <TextField>{data.pe_surname} {data.pe_name} {data.pe_patronymic}</TextField>
@@ -95,7 +95,7 @@ export function Card() {
                                 </Container>
                             }
                         </Container>
-                        <Container overf="scroll" padd w="255px" behav="column" gap="5px">
+                        <Container w="255px" behav="column" gap="5px">
                             <TextField type="h">Родители</TextField>
                             <Title>Отец</Title>
                             {
@@ -128,7 +128,7 @@ export function Card() {
                                     <TextField>Нет данных</TextField>
                             }
                         </Container>
-                        <Container w="255px" overf="scroll" padd behav="column" gap="5px">
+                        <Container w="255px" behav="column" gap="5px">
                             <TextField type="h">Дети</TextField>
                             {
                                 children != 0 ?
@@ -145,8 +145,8 @@ export function Card() {
                                     <TextField>Нет данных</TextField>
                             }
                         </Container>
-                        <Container w="255px" padd="5px" behav="column" gap="5px">
-                            <NavLink to="/search"><Btn size="15px" w="250px" h="40px">Назад</Btn></NavLink>
+                        <Container w="255px">
+                            <NavLink to="/search"><Btn size="15px" w="250px" h="40px">К поиску</Btn></NavLink>
                         </Container>
                     </Container>
                 </HighContainer>

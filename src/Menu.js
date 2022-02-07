@@ -13,10 +13,10 @@ export function Menu() {
                     <Container w="250px" behav="column" gap="10px">
                         {
                             user.rights == 'admin' &&
-                            <Link to="/reg"><Btn size="15px" w="100%" h="40px">Зарегистрировать детектива</Btn></Link>
+                            <Link to="/reg"><Btn size="15px" w="250px" h="40px">Зарегистрировать детектива</Btn></Link>
                         }
-                        <Link to="/allcases"><Btn size="15px" w="100%" h="40px">Дела</Btn></Link>
-                        <Link to="/search"><Btn size="15px" w="100%" h="40px">База данных</Btn></Link>
+                        <Link to="/allcases"><Btn size="15px" w="250px" h="40px">Дела</Btn></Link>
+                        <Link to="/search"><Btn size="15px" w="250px" h="40px">База данных</Btn></Link>
                     </Container>
                     :
                     <Navigate to="/" replace />

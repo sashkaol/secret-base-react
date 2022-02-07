@@ -67,7 +67,7 @@ export function Case() {
                                     <TextField key={el.pr_id}>
                                         <p><b>Название:</b> {el.pr_title}</p>
                                         <p><b>Описание:</b> {el.pr_description}</p>
-                                        <p><b>Владелец:</b>{el.people ? el.people.pe_surname + ' ' + el.people.pe_name + ' ' + el.people.pe_patronymic : 'Нет данных'}</p>
+                                        <p><b>Владелец:</b> {el.people ? el.people.pe_surname + ' ' + el.people.pe_name + ' ' + el.people.pe_patronymic : 'Нет данных'}</p>
                                     </TextField>
                                 ))
                                 :
@@ -76,36 +76,37 @@ export function Case() {
                             <TextField type="h"><h3>Участники:</h3></TextField>
                             {info.participants && info.participants != 0 ?
                                 info.participants.map((el) => (
-                                    <Container>
-                                        <TextField key={el.pa_id}>
-                                            <NavLink to={`/search/${el.people.pe_id}`}><p>{el.people.pe_surname + ' ' + el.people.pe_name + ' ' + el.people.pe_patronymic}</p></NavLink>
-                                        </TextField>
-                                        {
-                                            info.participants.testimony &&
-                                            <TextField>Показания от {info.participants.testimony.t_date}</TextField>
-                                        }
-                                    </Container>
+                                    <TextField key={el.pa_id}>
+                                        <Container gap="7px">
+                                            <Title>{el.pa_type}</Title>
+                                            <NavLink to={`/search/${el.people.pe_id}`}><Btn size="15px" w="235px" h="40px">{el.people.pe_surname + ' ' + el.people.pe_name + ' ' + el.people.pe_patronymic}</Btn></NavLink>
+                                            {
+                                                el.testimony &&
+                                                    el.testimony.map(el => (
+                                                        <NavLink to={`/testimony/${el.t_id}`}><Btn w="235px" h="30px" key={el.t_id}>Показания от {el.t_date}</Btn></NavLink>
+                                                    ))
+                                            }
+                                        </Container>
+                                    </TextField>
                                 ))
                                 :
                                 <TextField>Нет данных</TextField>
                             }
                         </Container>
                         <Container w="255px" gap="10px">
-                            <TextField type="h"><h3>Участники:</h3></TextField>
+                            <TextField type="h"><h3>Детективы:</h3></TextField>
                             {info.on_case && info.on_case != 0 ?
                                 info.on_case.map((el) => (
-                                    <Container>
-                                        <TextField key={el.detectives.d_id}>
-                                            {el.detectives.people.pe_surname}
-                                        </TextField>
-                                    </Container>
+                                    <NavLink key={el.detectives.d_id} to={`/profile/${el.detectives.d_id}`}><Btn w="255px" h="40px" size="15px">
+                                        {el.detectives.people.pe_surname} {el.detectives.people.pe_name} {el.detectives.people.pe_patronymic || ''}
+                                    </Btn></NavLink>
                                 ))
                                 :
                                 <TextField>Нет данных</TextField>
                             }
                         </Container>
                         <Container w="255px">
-                            <NavLink to="/allcases"><Btn size="15px" w="250px" h="40px">К делам</Btn></NavLink>
+                            <NavLink to="/allcases"><Btn size="15px" w="255px" h="40px">К делам</Btn></NavLink>
                         </Container>
                     </Container>
                 }

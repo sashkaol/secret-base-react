@@ -10,6 +10,7 @@ import { Container } from "./styles/styles";
 import { Profile } from "./Profile";
 import { SearchPage } from "./SearchPage";
 import { Card } from './Card';
+import { Testimony } from "./Testimony";
 
 export function App() {
     return (
@@ -24,7 +25,8 @@ export function App() {
                 <Route path="/allcases/:id" element={<Case />} />
                 <Route exact path="/reg" element={<Registration />} />
                 <Route exact path="/menu" element={<Menu />} />
-                <Route exact path="/profile" element={<Profile />} />
+                <Route path="/profile/:id" element={<Profile />} />
+                <Route path="/testimony/:id" element={<Testimony />} />
                 <Route exact path="/search" element={<SearchPage />} />
                 <Route path="/search/:id" element={<Card />} />
             </Routes >
