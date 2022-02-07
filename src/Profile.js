@@ -1,4 +1,5 @@
 import { supabase } from './SupaBase';
+import { normalDate } from './App';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAuth } from './hooks/user-auth';
@@ -90,7 +91,14 @@ export function Profile() {
                                     <Title>Полное имя</Title>
                                     <TextField>{info.people.pe_surname} {info.people.pe_name} {info.people.pe_patronymic}</TextField>
                                     <Title>Дата рождения</Title>
-                                    <TextField h="40px">{info.people.pe_date_birth}</TextField>
+                                    <TextField h="40px">{normalDate(info.people.pe_date_birth)}</TextField>
+                                    {
+                                        info.people.pe_date_end &&
+                                        <Container>
+                                            <Title>Дата смерти</Title>
+                                            <TextField h="40px">{normalDate(info.people.pe_date_end)}</TextField>
+                                        </Container>
+                                    }
                                     <Title>Адрес</Title>
                                     <TextField>{info.people.pe_address}</TextField>
                                 </Container>

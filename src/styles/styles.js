@@ -44,7 +44,7 @@ export const Input = styled.input`
     cursor: ${props => props.readOnly ? 'default' : 'text'};
 `
 export const Btn = styled.button`
-    background-color: ${props => (props.selected ? '#4F091D' : '#DD4A48')};
+    background-color: ${props => (props.selected || props.warn ? '#4F091D' : '#DD4A48')};
     color: #F5EEDC;
     box-shadow: 3px 3px 0px 0px #F5EEDC;
     width: ${props => props.w};
@@ -88,6 +88,7 @@ export const HeaderBtn = styled.div`
 `
 export const HighContainer = styled.div`
     margin-top: 70px;
+    padding-bottom: 70px;
     @media (max-width: 450px) {
         margin-top: 150px
     }

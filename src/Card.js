@@ -3,7 +3,8 @@ import { supabase } from './SupaBase';
 import { useState, useEffect } from 'react';
 import { useAuth } from './hooks/user-auth';
 import { Navigate } from 'react-router-dom';
-import { TextField, Title, Container, Loading, Btn, HighContainer } from './styles/styles'
+import { TextField, Title, Container, Loading, Btn, HighContainer } from './styles/styles';
+import { normalDate } from './App';
 
 const getPeopleInfo = async (id) => {
     let { data, error } = await supabase
@@ -75,7 +76,7 @@ export function Card() {
                             <Title>Полное имя</Title>
                             <TextField>{data.pe_surname} {data.pe_name} {data.pe_patronymic}</TextField>
                             <Title>Дата рождения</Title>
-                            <TextField h="40px">{data.pe_date_birth}</TextField>
+                            <TextField h="40px">{normalDate(data.pe_date_birth)}</TextField>
                             <Title>Адрес</Title>
                             <TextField>{data.pe_address}</TextField>
                             <Title>Спутник жизни</Title>
@@ -91,7 +92,7 @@ export function Card() {
                                 rels &&
                                 <Container gap="5px">
                                     <Title>Статус отношений</Title>
-                                    <TextField>{rels.r_status} с {rels.r_date_begin} {rels.r_date_end ? 'по ' + rels.r_date_end : pare.pe_id == 3 || pare.pe_id == 4 ? <span>и до конца &#9829;	</span> : ''}</TextField>
+                                    <TextField>{rels.r_status} с {normalDate(rels.r_date_begin)} {rels.r_date_end ? 'по ' + normalDate(rels.r_date_end) : pare.pe_id == 3 || pare.pe_id == 4 ? <span>и до конца &#9829;	</span> : ''}</TextField>
                                 </Container>
                             }
                         </Container>
@@ -105,7 +106,7 @@ export function Card() {
                                             <Btn size="15px" onClick={() => setLoad(true)} w="250px" h="40px">{data.pe_dad.pe_surname} {data.pe_dad.pe_name} {data.pe_dad.pe_patronymic}</Btn>
                                         </NavLink>
                                         <Title>Дата рождения</Title>
-                                        <TextField h="40px">{data.pe_dad.pe_date_birth}</TextField>
+                                        <TextField h="40px">{normalDate(data.pe_dad.pe_date_birth)}</TextField>
                                         <Title>Адрес</Title>
                                         <TextField>{data.pe_dad.pe_address}</TextField>
                                     </Container>
@@ -120,7 +121,7 @@ export function Card() {
                                             <Btn size="15px" w="250px" h="40px" onClick={() => setLoad(true)}>{data.pe_mom.pe_surname} {data.pe_mom.pe_name} {data.pe_mom.pe_patronymic}</Btn>
                                         </NavLink>
                                         <Title>Дата рождения</Title>
-                                        <TextField h="40px">{data.pe_mom.pe_date_birth}</TextField>
+                                        <TextField h="40px">{normalDate(data.pe_mom.pe_date_birth)}</TextField>
                                         <Title>Адрес</Title>
                                         <TextField>{data.pe_mom.pe_address}</TextField>
                                     </Container>
@@ -155,6 +156,6 @@ export function Card() {
                     <Loading>&#8987;</Loading>
                 </HighContainer>
             :
-    <Navigate to='/' replace />
+            <Navigate to='/' replace />
     )
 }

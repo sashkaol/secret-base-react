@@ -12,6 +12,14 @@ import { SearchPage } from "./SearchPage";
 import { Card } from './Card';
 import { Testimony } from "./Testimony";
 
+export function normalDate(date) {
+    let month = ['Янв', 'Фев', 'Мар', 'Апр', 'Мая', 'Июня', 'Июля', 'Авг', 'Сент', 'Окт', 'Ноя', 'Дек'];
+    let y = date.slice(0, 4);
+    let m = +date.slice(5, 7);
+    let d = +date.slice(8, 10);
+    return `${d} ${month[m - 1]} ${y}`;
+}
+
 export function App() {
     return (
         <Container w="100%" at="center" behav="column" fe="space-between" h="90%">

@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from './SupaBase';
+import { normalDate } from './App';
 import { Container, HighContainer, TextField, Title, Loading } from './styles/styles';
 
 const getTestimony = async (idT) => {
@@ -42,7 +43,7 @@ export function Testimony() {
                             <Title>Допрашиваемый:</Title>
                             <TextField>{data.participants.people.pe_surname} {data.participants.people.pe_name} {data.participants.people.pe_patronymic || ''}</TextField>
                             <Title>Дата:</Title>
-                            <TextField>{data.t_date}</TextField>
+                            <TextField>{normalDate(data.t_date)}</TextField>
                             <Title>Время:</Title>
                             <TextField>{data.t_time}</TextField>
                             <Title>Детектив:</Title>
