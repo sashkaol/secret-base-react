@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { CaseBook, Overlay, Container, Loading } from './styles/styles';
+import { CaseBook, Overlay, Container, Loading, HighContainer } from './styles/styles';
 import { NavLink, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks/user-auth';
 import { supabase } from './SupaBase';
@@ -17,28 +17,30 @@ export default function AllCases() {
     const [load, setLoad] = useState(true);
 
     useEffect(() => {
-        fetchData().then(res => { 
+        fetchData().then(res => {
             setAllCases(res);
-            setLoad(false); 
+            setLoad(false);
         });
     }, []);
 
     return (
         useAuth().isAuth ?
-            <Container w="100%" behav="row" gap="15px" padd="false">
-                {
-                    load && <Loading>&#8987;</Loading>
-                }
-                {
-                    allCases.map((el) => (
-                        <CaseBook key={el.ca_id}>
-                            <h3>Дело №{el.ca_id}</h3>
-                            <p>{el.ca_title}</p>
-                            <NavLink to={`/allcases/${el.ca_id}`}><Overlay /></NavLink>
-                        </CaseBook>
-                    ))
-                }
-            </Container>
+            <HighContainer>
+                <Container gap="15px">
+                    {
+                        load && <Loading>&#8987;</Loading>
+                    }
+                    {
+                        allCases.map((el) => (
+                            <CaseBook key={el.ca_id}>
+                                <h3>Дело №{el.ca_id}</h3>
+                                <p>{el.ca_title}</p>
+                                <NavLink to={`/allcases/${el.ca_id}`}><Overlay /></NavLink>
+                            </CaseBook>
+                        ))
+                    }
+                </Container>
+            </HighContainer>
             :
             <Navigate to='/' replace />
     )

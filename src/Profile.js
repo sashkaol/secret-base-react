@@ -2,8 +2,8 @@ import { supabase } from './SupaBase';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAuth } from './hooks/user-auth';
-import { Container, Loading, Input, Btn, TextField, Title } from './styles/styles';
-import { Navigate } from 'react-router-dom';
+import { Container, Loading, Input, Btn, TextField, Title, HighContainer } from './styles/styles';
+import { Navigate, NavLink } from 'react-router-dom';
 
 const getUser = async (id) => {
     let { data: detective, error } = await supabase
@@ -50,64 +50,70 @@ export function Profile() {
 
     return (
         useAuth().isAuth ?
-            <Container behav="row" gap="20px">
-                {
-                    load ?
-                        <Loading>&#8987;</Loading>
-                        :
-                        <Container behav="row" w="780px" gap="10px">
-                            <Container w="250px" gap="5px">
-                                <TextField type="h">Данные профиля</TextField>
-                                <Title>Логин</Title>
-                                <Input readOnly={!edit} value={!edit ? info.d_login : editInfo.d_login} onChange={(e) => {
-                                    setEditInfo({ ...editInfo, d_login: e.target.value });
-                                }} />
-                                <Title>Электронная почта</Title>
-                                <Input readOnly={!edit} value={!edit ? info.d_email : editInfo.d_email} onChange={(e) => {
-                                    setEditInfo({ ...editInfo, d_email: e.target.value });
-                                }} />
-                                <Title>Телефон</Title>
-                                <Input readOnly={!edit} value={!edit ? info.d_tel : editInfo.d_tel} onChange={(e) => {
-                                    setEditInfo({ ...editInfo, d_tel: e.target.value });
-                                }} />
-                                <Title>Звание</Title>
-                                <Input readOnly={info.d_grade == 'kapitan' ? !edit : true} value={!edit ? info.d_grade : editInfo.d_grade} onChange={(e) => {
-                                    setEditInfo({ ...editInfo, d_grade: e.target.value });
-                                }} />
-                                <Title>Права</Title>
-                                <Input readOnly={info.d_rights == 'admin' ? !edit : true} value={!edit ? info.d_rights : editInfo.d_rights} onChange={(e) => {
-                                    setEditInfo({ ...editInfo, d_rights: e.target.value });
-                                }} />
-                                <Btn size="15px" w="250px" h="40px" onClick={() => {
-                                    setEdit(true);
-                                }}>Редактировать</Btn>
-                            </Container>
-                            <Container w="250px" gap="5px">
-                                <TextField type="h">Контактная информация</TextField>
-                                <Title>Полное имя</Title>
-                                <TextField>{info.people.pe_surname} {info.people.pe_name} {info.people.pe_patronymic}</TextField>
-                                <Title>Дата рождения</Title>
-                                <TextField h="40px">{info.people.pe_date_birth}</TextField>
-                                <Title>Адрес</Title>
-                                <TextField>{info.people.pe_address}</TextField>
-                            </Container>
-                            {
-                                edit &&
-                                <Container w="250px" gap="10px">
-                                    <Btn w="120px" h="40px" onClick={() => {
-                                        setEdit(false);
-                                        setEditInfo(info);
-                                    }}>Отменить изменения</Btn>
-                                    <Btn type="submit" w="120px" h="40px" onClick={() => {
-                                        setEdit(false);
-                                        editData(user.id, editInfo);
-                                        setLoad(true);
-                                    }}>Сохранить изменения</Btn>
+            <HighContainer>
+                <Container gap="20px">
+                    {
+                        load ?
+                            <Loading>&#8987;</Loading>
+                            :
+                            <Container gap="10px">
+                                <Container w="250px" gap="5px">
+                                    <TextField type="h">Данные профиля</TextField>
+                                    <Title>Логин</Title>
+                                    <Input readOnly={!edit} value={!edit ? info.d_login : editInfo.d_login} onChange={(e) => {
+                                        setEditInfo({ ...editInfo, d_login: e.target.value });
+                                    }} />
+                                    <Title>Электронная почта</Title>
+                                    <Input readOnly={!edit} value={!edit ? info.d_email : editInfo.d_email} onChange={(e) => {
+                                        setEditInfo({ ...editInfo, d_email: e.target.value });
+                                    }} />
+                                    <Title>Телефон</Title>
+                                    <Input readOnly={!edit} value={!edit ? info.d_tel : editInfo.d_tel} onChange={(e) => {
+                                        setEditInfo({ ...editInfo, d_tel: e.target.value });
+                                    }} />
+                                    <Title>Звание</Title>
+                                    <Input readOnly={info.d_grade == 'kapitan' ? !edit : true} value={!edit ? info.d_grade : editInfo.d_grade} onChange={(e) => {
+                                        setEditInfo({ ...editInfo, d_grade: e.target.value });
+                                    }} />
+                                    <Title>Права</Title>
+                                    <Input readOnly={info.d_rights == 'admin' ? !edit : true} value={!edit ? info.d_rights : editInfo.d_rights} onChange={(e) => {
+                                        setEditInfo({ ...editInfo, d_rights: e.target.value });
+                                    }} />
+                                    <Btn size="15px" w="250px" h="40px" onClick={() => {
+                                        setEdit(true);
+                                    }}>Редактировать</Btn>
                                 </Container>
-                            }
-                        </Container>
-                }
-            </Container>
+                                <Container w="250px" gap="5px">
+                                    <TextField type="h">Контактная информация</TextField>
+                                    <Title>Полное имя</Title>
+                                    <TextField>{info.people.pe_surname} {info.people.pe_name} {info.people.pe_patronymic}</TextField>
+                                    <Title>Дата рождения</Title>
+                                    <TextField h="40px">{info.people.pe_date_birth}</TextField>
+                                    <Title>Адрес</Title>
+                                    <TextField>{info.people.pe_address}</TextField>
+                                </Container>
+                                <Container behav="column" gap="10px">
+                                    <NavLink to={`/search/${info.people.pe_id}`}>
+                                        <Btn w="250px" h="40px" size="15px">Все данные</Btn>
+                                    </NavLink>
+                                    {edit &&
+                                        <Container gap="10px">
+                                            <Btn w="120px" h="40px" onClick={() => {
+                                                setEdit(false);
+                                                setEditInfo(info);
+                                            }}>Отменить изменения</Btn>
+                                            <Btn type="submit" w="120px" h="40px" onClick={() => {
+                                                setEdit(false);
+                                                editData(user.id, editInfo);
+                                                setLoad(true);
+                                            }}>Сохранить изменения</Btn>
+                                        </Container>
+                                    }
+                                </Container>
+                            </Container>
+                    }
+                </Container>
+            </HighContainer >
             :
             <Navigate to='/' />
     )

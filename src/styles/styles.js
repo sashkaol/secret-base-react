@@ -73,6 +73,25 @@ export const TextField = styled.div`
     padding: 10px;
     box-sizing: border-box;
 `
+export const HeaderBtn = styled.div`
+    display: flex;
+    gap: 20px;
+    position: absolute;
+    top: 30px;
+    z-index: 100;
+    left: 30px;
+    @media (max-width: 450px) {
+        flex-direction: column;
+        gap: 10px;
+        margin: auto;
+    }
+`
+export const HighContainer = styled.div`
+    margin-top: 70px;
+    @media (max-width: 450px) {
+        margin-top: 150px
+    }
+`
 export const Container = styled.div`
     display: flex;
     flex-direction: ${props => props.behav};
@@ -85,7 +104,10 @@ export const Container = styled.div`
     align-items: ${props => props.at};
     align-self: ${props => props.as};
     flex-wrap: wrap;
-    flex-grow: ${props => props.g};
+    @media (max-width: 1050px) {
+        flex-direction: column;
+        align-items: center;
+    }
 `
 export const Title = styled.h4`
     color: #4F091D;

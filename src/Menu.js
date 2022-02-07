@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Btn, Container } from './styles/styles';
+import { Btn, Container, HighContainer } from './styles/styles';
 import { useAuth } from './hooks/user-auth';
 import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 export function Menu() {
     const user = useSelector((state) => state.user);
     return (
-        <div>
+        <HighContainer>
             {
                 useAuth().isAuth ?
                     <Container w="250px" behav="column" gap="10px">
@@ -21,6 +21,6 @@ export function Menu() {
                     :
                     <Navigate to="/" replace />
             }
-        </div>
+        </HighContainer>
     )
 }
