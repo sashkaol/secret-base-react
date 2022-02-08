@@ -66,7 +66,7 @@ export const TextField = styled.div`
     box-shadow: -2px -2px 0px 0px ${props => props.type ? '#F5EEDC' : '#4F091D' };
     background-color: ${props => props.type ? '#4F091D' : '#F5EEDC' };
     color: ${props => props.type ? '#F5EEDC' : '#4F091D' };
-    width: 100%;
+    width: ${props => props.w ? props.w : '100%'};
     height: ${props => props.h ? props.h :  'max-content'};
     min-height: 40px;
     font-size: 16px;

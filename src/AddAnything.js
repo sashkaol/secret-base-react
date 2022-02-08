@@ -1,21 +1,210 @@
-import { supabase } from "./SupaBase"
+import { supabase } from "./SupaBase";
+import { HighContainer, Container, Btn, Input, Title, TextField, Loading } from './styles/styles';
+import { useAuth } from './hooks/user-auth';
+import { useEffect, useState } from 'react';
+import { Navigate, useParams } from 'react-router-dom';
 
-const getAny = async (from) => {
-    let sel = from == 'people' ? '*' : `*, people(*)` ;
-    let {data, error} = await supabase
-        .from(from)
-        .select(sel)
+const getPeople = async (arr) => {
+    let { data, error } = await supabase
+        .from('people')
+        .select('*')
+        .not('pe_id', 'in', arr)
+    return data || error
+}
+
+const getYetParts = async (id) => {
+    let { data, error } = await supabase
+        .from('participants')
+        .select('pa_pe_id')
+        .eq('pa_ca_id', id)
+    let str = '(';
+    data.forEach((el, ind) => {
+        if (ind == data.length - 1)
+            str += el.pa_pe_id;
+        else
+            str += el.pa_pe_id + ',';
+    })
+    str += ')';
+    return str || error;
+}
+
+const addParts = async (obj, caId) => {
+    let arr = [];
+    Object.keys(obj).forEach(el => {
+        arr.push({
+            pa_ca_id: caId,
+            pa_pe_id: el,
+            pa_type: obj[el]
+        })
+    })
+    let { data, error } = await supabase
+        .from('participants')
+        .insert(arr)
     return data || error
 }
 
 export function AddParticipant() {
-    
+    const params = useParams();
+    const caId = params.id;
+    const [people, setPeople] = useState([]);
+    const [load, setLoad] = useState(true);
+    const [selected, setSelected] = useState({});
+
+    useEffect(() => {
+        getYetParts(caId).then(res => {
+            getPeople(res).then(res => {
+                setPeople(res);
+                setLoad(false);
+            })
+        })
+    }, []);
+
+    return (
+        useAuth().isAuth ?
+            <HighContainer>
+                {
+                    !load ?
+                        <Container gap="10px" behav="column">
+                            <Container behav="column" gap="10px">
+                                {
+                                    people.map(el => (
+                                        <Container key={el.pe_id} gap="10px">
+                                            <TextField w="450px">{el.pe_surname} {el.pe_name} {el.pe_patronymic || ''}</TextField>
+                                            <Btn selected={selected[el.pe_id] == 'Свидетель'} value='Свидетель' size="15px" w="130px" h="40px" onClick={(e) => {
+                                                setSelected({ ...selected, [el.pe_id]: e.target.value })
+                                            }}>Свидетель</Btn>
+                                            <Btn selected={selected[el.pe_id] == 'Пострадавший'} value='Пострадавший' size="15px" w="130px" h="40px" onClick={(e) => {
+                                                setSelected({ ...selected, [el.pe_id]: e.target.value })
+                                            }}>Пострадавший</Btn>
+                                            <Btn selected={selected[el.pe_id] == 'Подозреваемый'} value='Подозреваемый' size="15px" w="130px" h="40px" onClick={(e) => {
+                                                setSelected({ ...selected, [el.pe_id]: e.target.value })
+                                            }}>Подозреваемый</Btn>
+                                        </Container>
+                                    ))
+                                }
+                            </Container>
+                            <Container gap="10px">
+                                <Btn size="15px" w="220px" h="40px" onClick={() => {
+                                    addParts(selected, caId).then(res => setSelected({}))
+                                }}>Добавить в дело №{caId}</Btn>
+                                <Btn size="15px" w="220px" h="40px" onClick={() => {
+                                    setSelected({});
+                                }}>Очистить</Btn>
+                            </Container>
+                        </Container>
+                        :
+                        <Loading>&#8987;</Loading>
+                }
+            </HighContainer>
+            :
+            <Navigate to="/" />
+    )
 }
 
 export function AddProof() {
+    const params = useParams();
+    const caId = params.id;
+    const [dets, setDets] = useState([]);
+    const [load, setLoad] = useState(true);
+    const [selected, setSelected] = useState(['']);
 
+    return (
+        useAuth().isAuth ?
+            <HighContainer>
+                
+            </HighContainer>
+            :
+            <Navigate to="/" />
+    )
 }
 
-export function AddDetective() {
+const getDets = async (arr) => {
+    let { data, error } = await supabase
+        .from('detectives')
+        .select('*, people(*)')
+        .not('d_id', 'in', arr)
+        .neq('d_grade', 'kapitan')
+    return data || error
+}
 
+const addDets = async (arr, caId) => {
+    let obj = []
+    arr.forEach(el => {
+        obj.push({
+            o_ca_id: +caId,
+            o_d_id: el
+        })
+    })
+    console.log(obj);
+}
+
+const getYetDets = async (id) => {
+    let { data, error } = await supabase
+        .from('on_case')
+        .select('o_d_id')
+        .eq('o_ca_id', id)
+    let str = '(';
+    data.forEach((el, ind) => {
+        if (ind == data.length - 1)
+            str += el.o_d_id;
+        else
+            str += el.o_d_id + ',';
+    })
+    str += ')';
+    return str || error;
+}
+
+
+export function AddDetective() {
+    const params = useParams();
+    const caId = params.id;
+    const [dets, setDets] = useState([]);
+    const [load, setLoad] = useState(true);
+    const [selected, setSelected] = useState(['']);
+
+    useEffect(() => {
+        getYetDets(caId).then(res =>
+            getDets(res).then(res => {
+                setDets(res);
+                setLoad(false);
+            }));
+    }, [load]);
+
+    return (
+        useAuth().isAuth ?
+            <HighContainer>
+                {
+                    !load ?
+                        <Container gap="10px" behav="column">
+                            {
+                                dets && dets != 0 ?
+                                    <Container behav="column" gap="10px">
+                                        {dets.map(el => (
+                                            <Btn selected={selected.includes(el.d_id)} key={el.d_id} w="500px" h="40px" onClick={() => {
+                                                setSelected([...selected, el.d_id]);
+                                            }}>{el.people.pe_surname} {el.people.pe_name} {el.people.pe_patronymic || ''}</Btn>
+                                        ))}
+                                        <Container gap="10px">
+                                            <Btn size="15px" w="245px" h="40px" onClick={() => {
+                                                addDets(selected.slice(1), caId).then(res => {
+                                                    setSelected(['']);
+                                                    setLoad(true);
+                                                })
+                                            }}>Назначить на дело №{caId}</Btn>
+                                            <Btn size="15px" w="245px" h="40px" onClick={() => {
+                                                setSelected(['']);
+                                            }}>Очистить</Btn>
+                                        </Container>
+                                    </Container>
+                                    :
+                                    <TextField>Поставить на дело больше некого</TextField>
+                            }
+                        </Container>
+                        :
+                        <Loading>&#8987;</Loading>
+                }
+            </HighContainer>
+            :
+            <Navigate to="/" />
+    )
 }

@@ -61,7 +61,7 @@ export function Case() {
                             <TextField><b>Открыто:</b> {normalDate(info.ca_date_begin)}</TextField>
                             <TextField><b>Статус:</b> {info.ca_status == 'open' ? 'открыто' : 'закрыто'}</TextField>
                             <TextField type="h"><h3>Детективы:</h3></TextField>
-                            <Btn w="255px" warn h="30px">Добавить детектива</Btn>
+                            <NavLink to={`/adddetective/${id}`}><Btn w="255px" warn h="30px">Добавить детектива</Btn></NavLink>
                             {info.on_case && info.on_case != 0 ?
                                 info.on_case.map((el) => (
                                     <NavLink key={el.detectives.d_id} to={`/profile/${el.detectives.d_id}`}><Btn w="255px" h="40px" size="15px">
@@ -89,17 +89,17 @@ export function Case() {
                         </Container>
                         <Container w="255px" gap="10px">
                             <TextField type="h"><h3>Участники:</h3></TextField>
-                            <Btn w="255px" warn h="30px">Добавить участника</Btn>
+                            <NavLink to={`/addparticipants/${id}`}><Btn w="255px" warn h="30px">Добавить участника</Btn></NavLink>
                             {info.participants && info.participants != 0 ?
                                 info.participants.map((el) => (
                                     <TextField key={el.pa_id}>
                                         <Container gap="7px">
                                             <Title>{el.pa_type}, {el.pa_status == 'innocent' ? 'невиновен' : 'виновен'}</Title>
-                                            <NavLink to={`/search/${el.people.pe_id}`}><Btn size="15px" w="235px" h="40px">{el.people.pe_surname + ' ' + el.people.pe_name + ' ' + el.people.pe_patronymic}</Btn></NavLink>
+                                            <NavLink to={`/search/${el.people.pe_id}`}><Btn size="15px" w="235px" h="40px">{el.people.pe_surname} {el.people.pe_name} {el.people.pe_patronymic || ''}</Btn></NavLink>
                                             {
                                                 el.testimony ?
                                                 el.testimony.map(el => (
-                                                    <NavLink to={`/testimony/${el.t_id}`}><Btn w="235px" h="30px" key={el.t_id}>Показания от {normalDate(el.t_date)}</Btn></NavLink>
+                                                    <NavLink key={el.t_id} to={`/testimony/${el.t_id}`}><Btn w="235px" h="30px">Показания от {normalDate(el.t_date)}</Btn></NavLink>
                                                 ))
                                                 :
                                                 <Title>Показаний нет</Title>
