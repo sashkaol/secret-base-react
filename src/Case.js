@@ -29,6 +29,16 @@ const getDataCase = async (param) => {
             )
         `)
         .eq('ca_id', param)
+    // .eq('on_case.o_status', 'on')
+    return data || error
+}
+
+const suspendDet = async (caId, detId, status) => {
+    const { data, error } = await supabase
+        .from('on_case')
+        .update({ o_status: status == 'suspended' ? 'suspended' : 'on' })
+        .eq('o_ca_id', caId)
+        .eq('o_d_id', detId)
     return data || error
 }
 
@@ -45,7 +55,7 @@ export function Case() {
             console.log(res[0]);
             setLoad(false);
         });
-    }, []);
+    }, [load]);
 
     return (
         useAuth().isAuth ?
@@ -63,10 +73,20 @@ export function Case() {
                             <TextField type="h"><h3>Детективы:</h3></TextField>
                             <NavLink to={`/adddetective/${id}`}><Btn w="255px" warn h="30px">Добавить детектива</Btn></NavLink>
                             {info.on_case && info.on_case != 0 ?
-                                info.on_case.map((el) => (
-                                    <NavLink key={el.detectives.d_id} to={`/profile/${el.detectives.d_id}`}><Btn w="255px" h="40px" size="15px">
-                                        {el.detectives.people.pe_surname} {el.detectives.people.pe_name} {el.detectives.people.pe_patronymic || ''}
-                                    </Btn></NavLink>
+                                info.on_case.map((el, ind) => (
+                                    <Container key={el.detectives.d_id} gap="5px">
+                                        <NavLink to={`/profile/${el.detectives.d_id}`}><Btn title={info.on_case[ind].o_status == 'suspended' ? 'Отстранен' : 'В деле'} disabled={info.on_case[ind].o_status == 'suspended'} w="210px" h="40px" size="15px">
+                                            {el.detectives.people.pe_surname} {el.detectives.people.pe_name} {el.detectives.people.pe_patronymic || ''}
+                                        </Btn></NavLink>
+                                        <Btn size="18px" id={el.detectives.d_id} title={info.on_case[ind].o_status == 'suspended' ? 'Вернуть к делу' : 'Отстранить'} w="40px" h="40px" onClick={(e) => {
+                                            if (info.on_case[ind].o_status == 'suspended') {
+                                                suspendDet(+id, el.detectives.d_id, 'on');
+                                            } else {
+                                                suspendDet(+id, el.detectives.d_id, 'suspended');
+                                            }
+                                            setLoad(true);
+                                        }}>{info.on_case[ind].o_status == 'suspended' ? String.fromCharCode(8629) : String.fromCharCode(10060)}</Btn>
+                                    </Container>
                                 ))
                                 :
                                 <TextField>Нет данных</TextField>
@@ -74,7 +94,7 @@ export function Case() {
                         </Container>
                         <Container w="255px" behav="row" gap="10px">
                             <TextField type="h"><h3>Доказательства:</h3></TextField>
-                            <Btn w="255px" warn h="30px">Добавить улику</Btn>
+                            <NavLink to={`/addproof/${id}`}><Btn w="255px" warn h="30px">Добавить улику</Btn></NavLink>
                             {info.proof && info.proof != 0 ?
                                 info.proof.map((el) => (
                                     <TextField key={el.pr_id}>
@@ -98,11 +118,11 @@ export function Case() {
                                             <NavLink to={`/search/${el.people.pe_id}`}><Btn size="15px" w="235px" h="40px">{el.people.pe_surname} {el.people.pe_name} {el.people.pe_patronymic || ''}</Btn></NavLink>
                                             {
                                                 el.testimony ?
-                                                el.testimony.map(el => (
-                                                    <NavLink key={el.t_id} to={`/testimony/${el.t_id}`}><Btn w="235px" h="30px">Показания от {normalDate(el.t_date)}</Btn></NavLink>
-                                                ))
-                                                :
-                                                <Title>Показаний нет</Title>
+                                                    el.testimony.map(el => (
+                                                        <NavLink key={el.t_id} to={`/testimony/${el.t_id}`}><Btn w="235px" h="30px">Показания от {normalDate(el.t_date)}</Btn></NavLink>
+                                                    ))
+                                                    :
+                                                    <Title>Показаний нет</Title>
                                             }
                                             <Container gap="5px">
                                                 <Btn warn w="115px" h="30px">Добавить показания</Btn>

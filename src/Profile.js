@@ -75,11 +75,11 @@ export function Profile() {
                                         setEditInfo({ ...editInfo, d_tel: e.target.value });
                                     }} />
                                     <Title>Звание</Title>
-                                    <Input readOnly={info.d_grade == 'kapitan' ? !edit : true} value={!edit ? info.d_grade : editInfo.d_grade} onChange={(e) => {
+                                    <Input readOnly={user.rights == 'admin' ? !edit : true} value={!edit ? info.d_grade : editInfo.d_grade} onChange={(e) => {
                                         setEditInfo({ ...editInfo, d_grade: e.target.value });
                                     }} />
                                     <Title>Права</Title>
-                                    <Input readOnly={info.d_rights == 'admin' ? !edit : true} value={!edit ? info.d_rights : editInfo.d_rights} onChange={(e) => {
+                                    <Input readOnly={user.rights == 'admin' ? !edit : true} value={!edit ? info.d_rights : editInfo.d_rights} onChange={(e) => {
                                         setEditInfo({ ...editInfo, d_rights: e.target.value });
                                     }} />
                                     <Btn size="15px" w="250px" h="40px" onClick={() => {

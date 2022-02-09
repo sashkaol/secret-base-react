@@ -48,7 +48,7 @@ export function Registration() {
     const [tel, setTel] = useState('');
     const [email, setEmail] = useState('');
     const [grade, setGrade] = useState('');
-    const [rights, setRights] = useState('');
+    const [rights, setRights] = useState('user');
     const [peId, setPeId] = useState('');
     const [load, setLoad] = useState(true);
     const [selected, setSelected] = useState({
