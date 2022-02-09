@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Input, Btn, Container, Title, Loading, HighContainer } from './styles/styles';
+import { Input, Btn, Container, Title, Loading, HighContainer, Popup } from './styles/styles';
 import { supabase } from './SupaBase';
 import { useAuth } from './hooks/user-auth';
 import { Navigate } from 'react-router-dom';
@@ -57,6 +57,7 @@ export function Registration() {
     });
     const [selectPeople, setSelectPeople] = useState('');
     const [people, setPeople] = useState([]);
+    const [popup, setPopup] = useState('');
 
     useEffect(() => {
         getDets().then(res => {
@@ -65,11 +66,19 @@ export function Registration() {
                 setLoad(false);
             })
         });
-    }, []);
+    }, [load]);
 
     const registrate = () => {
         if (sha512(passw) === sha512(conf)) {
-            reg(login, sha512(passw), email, tel, grade, peId, rights).then(res => console.log(res));
+            reg(login, sha512(passw), email, tel, grade, peId, rights).then(res => {
+                setPopup('Пользователь успешно зарегистрирован');
+                setTimeout(() => {
+                    setPopup('');
+                }, 3000);
+                setLoad(true);
+                setLogin(''); setPassw(''); setRights(''); setTel(''); setSelected('user'); setGrade('');
+                setConf(''); setEmail('');
+            });
         }
     }
 
@@ -125,6 +134,7 @@ export function Registration() {
                         <Btn w="250px" h="40px" size="15px" onClick={registrate}>Зарегистрировать</Btn>
                     </Container>
                 </Container>
+                <Popup none={!popup}>{popup}</Popup>
             </HighContainer>
             :
             <Navigate to="/" />

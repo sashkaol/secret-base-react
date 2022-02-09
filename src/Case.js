@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from './SupaBase';
-import { Btn, Container, TextField, Title, Loading, HighContainer } from './styles/styles';
+import { Btn, Container, TextField, Title, Loading, HighContainer, Popup } from './styles/styles';
 import { useSelector } from 'react-redux';
 import { useAuth } from './hooks/user-auth';
 import { Navigate, NavLink } from 'react-router-dom';
@@ -94,13 +94,15 @@ export function Case() {
                         </Container>
                         <Container w="255px" behav="row" gap="10px">
                             <TextField type="h"><h3>Доказательства:</h3></TextField>
-                            <NavLink to={`/addproof/${id}`}><Btn w="255px" warn h="30px">Добавить улику</Btn></NavLink>
+                            <NavLink to={`/addproof/${id}/0`}><Btn w="255px" warn h="30px">Добавить улику</Btn></NavLink>
                             {info.proof && info.proof != 0 ?
                                 info.proof.map((el) => (
                                     <TextField key={el.pr_id}>
                                         <p><b>Название:</b> {el.pr_title}</p>
                                         <p><b>Описание:</b> {el.pr_description}</p>
-                                        <p><b>Владелец:</b> {el.people ? el.people.pe_surname + ' ' + el.people.pe_name + ' ' + el.people.pe_patronymic : 'Нет данных'}</p>
+                                        <p><b>Владелец:</b> {el.people ? el.people.pe_surname + ' ' + el.people.pe_name + ' ' + (el.people.pe_patronymic || '') : 'Нет данных'}</p>
+                                        <br />
+                                        <NavLink to={`/addproof/${id}/1/${el.pr_id}`}><Btn w="100%" h="30px">Изменить</Btn></NavLink>
                                     </TextField>
                                 ))
                                 :

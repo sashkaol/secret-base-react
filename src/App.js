@@ -40,7 +40,7 @@ export function App() {
                 <Route path="/search/:id" element={<Card />} />
                 <Route path="/addparticipants/:id" element={<AddParticipant />} />
                 <Route path="/adddetective/:id" element={<AddDetective />} />
-                <Route path="/addproof/:id" element={<AddProof />} />
+                <Route path="/addproof/:id/:red/:idPr" element={<AddProof />} />
             </Routes >
         </Container>
     )

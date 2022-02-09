@@ -141,3 +141,19 @@ export const Loading = styled.div`
   color: #F5EEDC;
   font-size: 1.2rem;
 `;
+export const Popup = styled.div`
+    position: fixed;
+    z-index: 100000;
+    right: 30px;
+    bottom: 30px;
+    padding: 10px;
+    box-sizing: border-box;
+    width: 200px;
+    height: max-content;
+    box-shadow: 2px 2px 0px 0px #4F091D;
+    color: #4F091D;
+    background-color: #F5EEDC;
+    font-size: 15px;
+    opacity: ${props => props.none ? 0 : 1};
+    transition: opacity 0.3s easy-in-out;
+`
