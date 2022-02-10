@@ -1,5 +1,5 @@
 import { supabase } from "./SupaBase";
-import { HighContainer, Container, Btn, Input, Title, TextField, Loading, Popup } from './styles/styles';
+import { HighContainer, Container, Btn, Input, Title, TextField, Loading, Popup, TextArea } from './styles/styles';
 import { useAuth } from './hooks/user-auth';
 import { useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
@@ -318,4 +318,118 @@ export function AddDetective() {
             :
             <Navigate to="/" />
     )
+}
+
+const getOnCaseDets = async (caId) => {
+    let { data, error } = await supabase
+        .from('on_case')
+        .select('*, detectives (*, people(*))')
+        .eq('o_ca_id', caId);
+    return data || error
+}
+
+const insertTestimony = async (obj) => {
+    let {data, error} = await supabase
+        .from('testimony')
+        .insert([obj])
+    return data || error
+}
+
+export function AddTestimony() {
+    const params = useParams();
+    const paId = params.idPa;
+    const caId = params.id;
+    const [dets, setDets] = useState([]);
+    const [load, setLoad] = useState(true);
+    const [detName, setDetName] = useState('');
+    const [selected, setSelected] = useState('');
+    const [testimony, setTestimony] = useState({
+        t_date: '',
+        t_time: '',
+        t_text: '',
+        t_o_id: '',
+        t_pa_id: +paId
+    });
+    const [popup, setPopup] = useState('');
+    const showPopup = (text) => {
+        setPopup(text);
+        setTimeout(() => {
+            setPopup('')
+        }, 3000)
+    }
+
+    useEffect(() => {
+        getOnCaseDets(caId).then(res => {
+            console.log(res);
+            setDets(res);
+            setLoad(false)
+        })
+    }, []);
+
+    return (
+        useAuth().isAuth ?
+            <HighContainer>
+                {
+                    !load ?
+                        <Container gap="20px">
+                            <Container w="400px" gap="7px">
+                                <Title>Дата</Title>
+                                <Input value={testimony.t_date} type="date" onChange={(e) => {
+                                    setTestimony({ ...testimony, t_date: e.target.value })
+                                }} />
+                                <Title>Время</Title>
+                                <Input value={testimony.t_time} type="time" onChange={(e) => {
+                                    setTestimony({ ...testimony, t_time: e.target.value })
+                                }} />
+                                <Title>Детектив, который вел допрос</Title>
+                                <Input value={detName} readOnly type="text" placeholder="Владельцев Владелец Владельцевич" />
+                                <Container w="100%" at="center" behav="column" gap="10px">
+                                    {
+                                        dets ?
+                                            dets.map(el => (
+                                                <Btn w="100%" h="30px" key={el.o_id} selected={selected == el.o_id} onClick={() => {
+                                                    setSelected(el.o_id);
+                                                    setDetName(el.detectives.people.pe_surname + ' ' + el.detectives.people.pe_name + ' ' + (el.detectives.people.pe_patronymic || ''));
+                                                    setTestimony({ ...testimony, t_o_id: el.o_id })
+                                                }}>{el.detectives.people.pe_surname} {el.detectives.people.pe_name} {el.detectives.people.pe_patronymic || ''}</Btn>
+                                            ))
+                                            :
+                                            <TextField>Нет данных</TextField>
+                                    }
+                                </Container>
+                            </Container>
+                            <Container w="400px" gap="7px" fe="flex-end">
+                                <Title>Показания</Title>
+                                <TextArea value={testimony.t_text} placeholder="Текс......." onChange={(e) => {
+                                    setTestimony({ ...testimony, t_text: e.target.value })
+                                }} size="15px" texta="400px" />
+                                <Btn w="200px" h="40px" onClick={() => {
+                                    if (testimony.t_date == '' || testimony.t_time == '' || testimony.t_text == '' || testimony.t_o_id == '') {
+                                        showPopup('Заполните все поля');
+                                    } else {
+                                        insertTestimony(testimony).then(() => {
+                                            setTestimony({
+                                                t_date: '',
+                                                t_time: '',
+                                                t_text: '',
+                                                t_o_id: '',
+                                                t_pa_id: +paId
+                                            });
+                                            setSelected('');
+                                            setDetName('');
+                                            showPopup('Показания успешно добавлены')
+                                        });
+                                    }
+                                }}>Добавить</Btn>
+                            </Container>
+                            <Popup none={!popup}>{popup}</Popup>
+                        </Container>
+                        :
+                        <Loading>&#8987;</Loading>
+                }
+            </HighContainer>
+            :
+            <Navigate to="/" />
+    )
+
 }

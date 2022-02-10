@@ -7,7 +7,7 @@ import { supabase } from './SupaBase';
 const fetchData = async () => {
     let { data: cases, error } = await supabase
         .from('cases')
-        .select('ca_id, ca_title')
+        .select('ca_id, ca_title, ca_status')
     return cases || error;
 }
 
@@ -34,7 +34,10 @@ export default function AllCases() {
                         allCases.map((el) => (
                             <CaseBook key={el.ca_id}>
                                 <h3>Дело №{el.ca_id}</h3>
+                                <br />
                                 <p>{el.ca_title}</p>
+                                <br />
+                                <p>{el.ca_status == 'open' ? 'открыто' : 'закрыто'}</p>
                                 <NavLink to={`/allcases/${el.ca_id}`}><Overlay /></NavLink>
                             </CaseBook>
                         ))

@@ -1,4 +1,4 @@
-import { Btn, Container, HeaderBtn } from "./styles/styles";
+import { Btn, Container, HeaderBtn, Title } from "./styles/styles";
 import { useDispatch } from 'react-redux';
 import { removeUser } from './store/slices/userSlice';
 import { Link } from "react-router-dom";
@@ -14,6 +14,7 @@ export function Header() {
             <Btn w="100px" h="30px" onClick={() => {
                 dispatch(removeUser());
             }}>Выйти</Btn>
+            <Title>Вы вошли как {user.login}</Title>
         </HeaderBtn>
     )
 }

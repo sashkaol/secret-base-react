@@ -35,7 +35,7 @@ export const Input = styled.input`
     background-color: #F5EEDC;
     color: ${props => props.readOnly ? '#4F091D' : '#DD4A48'};
     width: ${props => props.w ? props.w : '100%'};
-    height: 40px;
+    height: ${props => props.texta ? props.texta : '40px'};
     outline: none;
     border: none;
     padding: 7px;
@@ -43,6 +43,20 @@ export const Input = styled.input`
     font-size: ${props => props.size};
     cursor: ${props => props.readOnly ? 'default' : 'text'};
 `
+export const TextArea = styled.textarea`
+    box-shadow: ${props => props.readOnly ? '-2px -2px 0px 0px #4F091D' : '3px 3px 0px 0px #DD4A48'};
+    background-color: #F5EEDC;
+    color: ${props => props.readOnly ? '#4F091D' : '#DD4A48'};
+    width: ${props => props.w ? props.w : '100%'};
+    height: ${props => props.texta ? props.texta : '40px'};
+    outline: none;
+    border: none;
+    padding: 7px;
+    box-sizing: border-box;
+    font-size: ${props => props.size};
+    cursor: ${props => props.readOnly ? 'default' : 'text'};
+`
+
 export const Btn = styled.button`
     background-color: ${props => (props.selected || props.warn ? '#4F091D' : '#DD4A48')};
     color: #F5EEDC;
@@ -80,10 +94,12 @@ export const HeaderBtn = styled.div`
     top: 30px;
     z-index: 100;
     left: 30px;
+    align-items: center;
     @media (max-width: 450px) {
         flex-direction: column;
         gap: 10px;
         margin: auto;
+        justify-content: center;
     }
 `
 export const HighContainer = styled.div`
@@ -156,4 +172,16 @@ export const Popup = styled.div`
     font-size: 15px;
     opacity: ${props => props.none ? 0 : 1};
     transition: opacity 0.3s easy-in-out;
+`
+export const Warning = styled.div`
+  position: fixed;
+  top: 200px;
+  left: 500px;
+  z-index: 1000000000000;
+  width: 700px;
+  height: 500px;
+  padding: 20px;
+  background-color: #4F091D;
+  color: #F5EEDC;
+  box-shadow: 2px 2px 0px 0px #F5EEDC;
 `

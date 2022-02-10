@@ -11,7 +11,7 @@ import { Profile } from "./Profile";
 import { SearchPage } from "./SearchPage";
 import { Card } from './Card';
 import { Testimony } from "./Testimony";
-import { AddDetective, AddParticipant, AddProof } from "./AddAnything";
+import { AddDetective, AddParticipant, AddProof, AddTestimony } from "./AddAnything";
 
 export function normalDate(date) {
     let month = ['Янв', 'Фев', 'Мар', 'Апр', 'Мая', 'Июня', 'Июля', 'Авг', 'Сент', 'Окт', 'Ноя', 'Дек'];
@@ -41,6 +41,8 @@ export function App() {
                 <Route path="/addparticipants/:id" element={<AddParticipant />} />
                 <Route path="/adddetective/:id" element={<AddDetective />} />
                 <Route path="/addproof/:id/:red/:idPr" element={<AddProof />} />
+                <Route path="/testimony/:id" element={<Testimony />} />
+                <Route path="/addtestimony/:id/:idPa" element={<AddTestimony />} />
             </Routes >
         </Container>
     )

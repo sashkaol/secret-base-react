@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from './SupaBase';
-import { Btn, Container, TextField, Title, Loading, HighContainer, Popup } from './styles/styles';
+import { Btn, Container, TextField, Title, Loading, HighContainer, Popup, Warning } from './styles/styles';
 import { useSelector } from 'react-redux';
 import { useAuth } from './hooks/user-auth';
 import { Navigate, NavLink } from 'react-router-dom';
@@ -29,7 +29,14 @@ const getDataCase = async (param) => {
             )
         `)
         .eq('ca_id', param)
-    // .eq('on_case.o_status', 'on')
+    return data || error
+}
+
+const updateCase = async (caId, obj) => {
+    let { data, error } = await supabase
+        .from('cases')
+        .update([obj])
+        .eq('ca_id', caId)
     return data || error
 }
 
@@ -56,6 +63,13 @@ export function Case() {
             setLoad(false);
         });
     }, [load]);
+    const [popup, setPopup] = useState('');
+    const showPopup = (text) => {
+        setPopup(text);
+        setTimeout(() => {
+            setPopup('')
+        }, 3000)
+    }
 
     return (
         useAuth().isAuth ?
@@ -69,7 +83,20 @@ export function Case() {
                             <TextField><b>Описание:</b> {info.ca_description}</TextField>
                             <TextField><b>Тип:</b> {info.ca_type}</TextField>
                             <TextField><b>Открыто:</b> {normalDate(info.ca_date_begin)}</TextField>
+                            {
+                                info.ca_date_end &&
+                                <TextField><b>Закрыто:</b> {normalDate(info.ca_date_end)}</TextField>
+                            }
                             <TextField><b>Статус:</b> {info.ca_status == 'open' ? 'открыто' : 'закрыто'}</TextField>
+                            {
+                                user.rights == 'admin' && info.ca_status == 'open' &&
+                                <Btn onClick={() => {
+                                    updateCase(info.ca_id, {ca_status: 'close', ca_date_end: new Date()}).then(res => {
+                                        setLoad(true);
+                                        showPopup('Дело закрыто');
+                                    })
+                                }} w="255px" h="40px" size="15px">Закрыть дело</Btn>
+                            }
                             <TextField type="h"><h3>Детективы:</h3></TextField>
                             <NavLink to={`/adddetective/${id}`}><Btn w="255px" warn h="30px">Добавить детектива</Btn></NavLink>
                             {info.on_case && info.on_case != 0 ?
@@ -78,7 +105,7 @@ export function Case() {
                                         <NavLink to={`/profile/${el.detectives.d_id}`}><Btn title={info.on_case[ind].o_status == 'suspended' ? 'Отстранен' : 'В деле'} disabled={info.on_case[ind].o_status == 'suspended'} w="210px" h="40px" size="15px">
                                             {el.detectives.people.pe_surname} {el.detectives.people.pe_name} {el.detectives.people.pe_patronymic || ''}
                                         </Btn></NavLink>
-                                        <Btn size="18px" id={el.detectives.d_id} title={info.on_case[ind].o_status == 'suspended' ? 'Вернуть к делу' : 'Отстранить'} w="40px" h="40px" onClick={(e) => {
+                                        <Btn disabled={info.ca_status == 'close'} size="18px" id={el.detectives.d_id} title={info.on_case[ind].o_status == 'suspended' ? 'Вернуть к делу' : 'Отстранить'} w="40px" h="40px" onClick={(e) => {
                                             if (info.on_case[ind].o_status == 'suspended') {
                                                 suspendDet(+id, el.detectives.d_id, 'on');
                                             } else {
@@ -102,7 +129,7 @@ export function Case() {
                                         <p><b>Описание:</b> {el.pr_description}</p>
                                         <p><b>Владелец:</b> {el.people ? el.people.pe_surname + ' ' + el.people.pe_name + ' ' + (el.people.pe_patronymic || '') : 'Нет данных'}</p>
                                         <br />
-                                        <NavLink to={`/addproof/${id}/1/${el.pr_id}`}><Btn w="100%" h="30px">Изменить</Btn></NavLink>
+                                        <NavLink to={`/addproof/${id}/1/${el.pr_id}`}><Btn disabled={info.ca_status == 'close'} w="100%" h="30px">Изменить</Btn></NavLink>
                                     </TextField>
                                 ))
                                 :
@@ -127,8 +154,8 @@ export function Case() {
                                                     <Title>Показаний нет</Title>
                                             }
                                             <Container gap="5px">
-                                                <Btn warn w="115px" h="30px">Добавить показания</Btn>
-                                                <Btn warn w="115px" h="30px">Объявить виновным</Btn>
+                                                <NavLink to={`/addtestimony/${id}/${el.pa_id}`}><Btn warn w="115px" h="30px" disabled={info.ca_status == 'close'}>Добавить показания</Btn></NavLink>
+                                                <Btn warn w="115px" h="30px" disabled={info.ca_status == 'close'}>Объявить виновным</Btn>
                                             </Container>
                                         </Container>
                                     </TextField>
@@ -140,6 +167,8 @@ export function Case() {
                         <Container w="255px">
                             <NavLink to="/allcases"><Btn size="15px" w="255px" h="40px">К делам</Btn></NavLink>
                         </Container>
+                        <Popup none={!popup}>{popup}</Popup>
+                        {/* <Warning>Хаха</Warning> */}
                     </Container>
                 }
             </HighContainer>
