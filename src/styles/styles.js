@@ -127,7 +127,7 @@ export const Container = styled.div`
     }
 `
 export const Title = styled.h4`
-    color: #4F091D;
+    color: ${props => props.light ? '#F5EEDC' : '#4F091D'};
     font-weight: 200;
 `
 export const Error = styled.div`
@@ -159,7 +159,7 @@ export const Loading = styled.div`
 `;
 export const Popup = styled.div`
     position: fixed;
-    z-index: 100000;
+    z-index: 100000000000;
     right: 30px;
     bottom: 30px;
     padding: 10px;
@@ -175,11 +175,11 @@ export const Popup = styled.div`
 `
 export const Warning = styled.div`
   position: fixed;
-  top: 25%;
+  top: auto;
   left: 25%;
   z-index: 1000000000000;
   width: 50%;
-  height: 300px;
+  height: max-content;
   padding: 20px;
   background-color: #4F091D;
   color: #F5EEDC;
