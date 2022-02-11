@@ -58,7 +58,7 @@ export function AddParticipant() {
                 setLoad(false);
             })
         })
-    }, []);
+    }, [load]);
 
     return (
         useAuth().isAuth ?
@@ -86,7 +86,10 @@ export function AddParticipant() {
                             </Container>
                             <Container gap="10px">
                                 <Btn size="15px" w="220px" h="40px" onClick={() => {
-                                    addParts(selected, caId).then(res => setSelected({}))
+                                    addParts(selected, caId).then(res => {
+                                        setSelected({});
+                                        setLoad(true);
+                                    })
                                 }}>Добавить в дело №{caId}</Btn>
                                 <Btn size="15px" w="220px" h="40px" onClick={() => {
                                     setSelected({});

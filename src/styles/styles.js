@@ -175,13 +175,23 @@ export const Popup = styled.div`
 `
 export const Warning = styled.div`
   position: fixed;
-  top: 200px;
-  left: 500px;
+  top: 25%;
+  left: 25%;
   z-index: 1000000000000;
-  width: 700px;
-  height: 500px;
+  width: 50%;
+  height: 300px;
   padding: 20px;
   background-color: #4F091D;
   color: #F5EEDC;
-  box-shadow: 2px 2px 0px 0px #F5EEDC;
+  box-shadow: 5px 5px 0px 0px #F5EEDC;
+`
+export const Voile = styled.div`
+    top: 0;
+    left: 0;
+  position: fixed;
+  z-index: 100000000;
+  background-color: #97BFB4;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0.9;
 `

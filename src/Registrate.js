@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Input, Btn, Container, Title, Loading, HighContainer, Popup } from './styles/styles';
+import { Input, Btn, Container, Title, Loading, HighContainer, Popup, Error } from './styles/styles';
 import { supabase } from './SupaBase';
 import { useAuth } from './hooks/user-auth';
 import { Navigate } from 'react-router-dom';
@@ -40,6 +40,14 @@ const getDets = async () => {
     return detRes || error;
 }
 
+const checkLogin = async (login) => {
+    let { data, error } = await supabase
+        .from('detectives')
+        .select('d_id')
+        .eq('d_login', login)
+    return data || error
+}
+
 export function Registration() {
 
     const [passw, setPassw] = useState('');
@@ -58,6 +66,16 @@ export function Registration() {
     const [selectPeople, setSelectPeople] = useState('');
     const [people, setPeople] = useState([]);
     const [popup, setPopup] = useState('');
+    const [loadReg, setLoadReg] = useState(false);
+    // errors
+    const [erLogin, setErLogin] = useState('');
+    const [erTel, setErTel] = useState('');
+    const [erMail, setErMail] = useState('');
+    const [erGrade, setErGrade] = useState('');
+    const [erPassw, setErPassw] = useState('');
+    const [erConf, setErConf] = useState('');
+    const [erEmpty, setErEmpty] = useState('');
+    const [erPeople, setErPeople] = useState('');
 
     useEffect(() => {
         getDets().then(res => {
@@ -68,18 +86,69 @@ export function Registration() {
         });
     }, [load]);
 
+    const showPopup = (text) => {
+        setPopup(text);
+        setTimeout(() => {
+            setPopup('')
+        }, 3000)
+    }
+
     const registrate = () => {
-        if (sha512(passw) === sha512(conf)) {
-            reg(login, sha512(passw), email, tel, grade, peId, rights).then(res => {
-                setPopup('Пользователь успешно зарегистрирован');
-                setTimeout(() => {
-                    setPopup('');
-                }, 3000);
-                setLoad(true);
-                setLogin(''); setPassw(''); setRights(''); setTel(''); setSelected('user'); setGrade('');
-                setConf(''); setEmail('');
-            });
-        }
+        setErLogin(''); setErLogin(''); setErPassw(''); setErTel(''); setErGrade(''); setErConf(''); setErMail(''); setErEmpty('');
+        setLoadReg(true);
+        checkLogin(login).then(res => {
+            if (login == '' || email == '' || tel == '' || grade == '' || passw == '' || conf == '') {
+                setErEmpty('Все поля должны быть заполнены');
+                return 1
+            }
+            if (res != 0) {
+                setErLogin('Пользователь с таким логином уже существует');
+                return 1
+            }
+            if (!(/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])(?=.*\.){6,}/g.test(passw))) {
+                setErPassw('Пароль недостаточно надежен, он должен быть длиннее 6 символов содержать: заглавные и строчные латинские буквы, цифры, точки и спецсимволы')
+                return 1
+            }
+            if (!(email.includes('@'))) {
+                setErMail('Электронная почта должна содержать "@"')
+                return 1
+            }
+            if (sha512(passw) != sha512(conf)) {
+                setErConf('Пароли не одинаковые')
+                return 1
+            }
+            let grades = ['detective', 'major', 'kapitan']
+            if (!(grades.includes(grade))) {
+                setErGrade('Звания могут быть только: detective, major, kapitan')
+                return 1
+            }
+            if (!(/^(\+7|7|8)[0-9]{10}$/.test(tel))) {
+                setErTel('Телефон не соответствует формату 80000000000 или +70000000000')
+                return 1
+            }
+            if (selectPeople == '') {
+                setErPassw('Вы не выбрали человека')
+                return 1
+            }
+            if (selected.first == true && grade != 'kapitan') {
+                setErGrade('Администратором может быть ТОЛЬКО капитан участка')
+                return 1
+            }
+            return 0
+        }).then((res) => {
+            setLoadReg(false);
+            if (res == 0) {
+                showPopup('Вы успешно зарегистрировали детектива');
+                reg(login, sha512(passw), email, tel, grade, peId, rights).then(() => {
+                    setLoad(true);
+                    setLogin(''); setPassw(''); setRights(''); setTel(''); setSelected({ first: false, sec: true }); setGrade('');
+                    setConf(''); setEmail('');
+                });
+
+            } else {
+                showPopup('Перепроверьте данные')
+            }
+        })
     }
 
     return (
@@ -131,7 +200,26 @@ export function Registration() {
                                 setSelected({ first: false, sec: true });
                             }}>Пользователь</Btn>
                         </Container>
-                        <Btn w="250px" h="40px" size="15px" onClick={registrate}>Зарегистрировать</Btn>
+                        <Btn disabled={loadReg} w="250px" h="40px" size="15px" onClick={registrate}>
+                            {
+                                !loadReg ?
+                                    'Зарегистрировать'
+                                    :
+                                    <Container fe="center">
+                                        <Loading>&#8987;</Loading>
+                                    </Container>
+                            }
+                        </Btn>
+                    </Container>
+                    <Container w="250px" gap="20px" behav="column">
+                        {erLogin && <Error>{erLogin}</Error>}
+                        {erTel && <Error>{erTel}</Error>}
+                        {erMail && <Error>{erMail}</Error>}
+                        {erGrade && <Error>{erGrade}</Error>}
+                        {erPassw && <Error>{erPassw}</Error>}
+                        {erConf && <Error>{erConf}</Error>}
+                        {erPeople && <Error>{erPeople}</Error>}
+                        {erEmpty && <Error>{erEmpty}</Error>}
                     </Container>
                 </Container>
                 <Popup none={!popup}>{popup}</Popup>
