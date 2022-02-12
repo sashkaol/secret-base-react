@@ -96,7 +96,7 @@ export function Detectives() {
                                                 <Title>{el.d_status != 'working' && 'В отставке'}</Title>
                                                 <Link to={`/profile/${el.d_id}`}><Btn w="280px" size="15px" h="40px" key={el.d_id}>{el.people.pe_surname} {el.people.pe_name} {el.people.pe_patronymic || ''}</Btn></Link>
                                                 <Container gap="5px">
-                                                    <Btn onClick={() => retireDet(el.d_id)} disabled={el.d_status != 'working'} size="15px" w="137.5px" h="40px">{user.id == el.d_id ? 'Уволиться' : 'Отправить в отставку'}</Btn>
+                                                    <Btn onClick={() => retireDet(el.d_id)} disabled={el.d_status != 'working' || (user.rights == 'user' && user.id != el.d_id)} size="15px" w="137.5px" h="40px">{user.id == el.d_id ? 'Уволиться' : 'Отправить в отставку'}</Btn>
                                                     <Btn onClick={() => highDet(el.d_id)} disabled={user.rights == 'user' || el.d_status != 'working'} size="15px" w="137.5px" h="40px">Повысить до капитана</Btn>
                                                 </Container>
                                             </Container>
