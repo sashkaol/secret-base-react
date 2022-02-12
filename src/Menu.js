@@ -15,6 +15,7 @@ export function Menu() {
                             user.rights == 'admin' &&
                             <Link to="/reg"><Btn size="15px" w="250px" h="40px">Зарегистрировать детектива</Btn></Link>
                         }
+                        <Link to="/detectives"><Btn size="15px" w="250px" h="40px">Состав участка</Btn></Link>
                         <Link to="/allcases"><Btn size="15px" w="250px" h="40px">Дела</Btn></Link>
                         <Link to="/search"><Btn size="15px" w="250px" h="40px">База данных</Btn></Link>
                     </Container>

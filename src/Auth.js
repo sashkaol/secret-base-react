@@ -11,7 +11,7 @@ var sha512 = require('js-sha512').sha512;
 const checkLogin = async (login) => {
     let { data: detectives, error } = await supabase
         .from('detectives')
-        .select('d_id')
+        .select('d_id, d_status')
         .eq('d_login', login)
     return detectives || error;
 }
@@ -38,20 +38,26 @@ export function Authorization() {
         setError('');
         checkLogin(login)
             .then(res => {
-                let pas = document.querySelector('#apassw').value;
-                auth(res[0].d_id, sha512(pas))
-                    .then(res => {
-                        if (res != 0) {
-                            setAuthor(res[0].d_login);
-                            dispatch(setUser({ login: res[0].d_login, id: res[0].d_id, rights: res[0].d_rights }));
-                        } else {
-                            setError('Неверный логин или пароль');
-                        }
-                        setLoad(false);
-                    })
+                console.log(res);
+                if (res[0].d_status == 'working') {
+                    let pas = document.querySelector('#apassw').value;
+                    auth(res[0].d_id, sha512(pas))
+                        .then(res => {
+                            if (res != 0) {
+                                setAuthor(res[0].d_login);
+                                dispatch(setUser({ login: res[0].d_login, id: res[0].d_id, rights: res[0].d_rights }));
+                            } else {
+                                setError('Неверный логин или пароль');
+                            }
+                            setLoad(false);
+                        })
+                } else {
+                    setError('Вы в отставке, доступ запрещен');
+                    setLoad(false)
+                }
             })
             .catch(err => {
-                setError('Неверный логин или пароль');
+                setError('Такого пользователя нет');
                 setLoad(false);
             })
     }
@@ -65,8 +71,8 @@ export function Authorization() {
                             <Navigate to='/menu' replace /> : <Navigate to='/allcases' replace />
                         :
                         <Container behav="column" w="250px" gap="20px">
-                            <Input id="alogin" placeholder="your login" type="text" />
-                            <Input id="apassw" placeholder="your password" type="password" />
+                            <Input id="alogin" placeholder="Логин" type="text" />
+                            <Input id="apassw" placeholder="Пароль" type="password" />
                             <Btn disabled={load} w="250px" h="40px" size="18px" onClick={logIn}>
                                 {
                                     load ? <Loading>&#8987;</Loading> : 'Войти'

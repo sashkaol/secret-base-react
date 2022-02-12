@@ -109,17 +109,17 @@ export function Registration() {
                 setErPassw('Пароль недостаточно надежен, он должен быть длиннее 6 символов содержать: заглавные и строчные латинские буквы, цифры, точки и спецсимволы')
                 return 1
             }
-            if (!(email.includes('@'))) {
-                setErMail('Электронная почта должна содержать "@"')
+            if (!( /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/.test(email))) {
+                setErMail('Электронная почта должна содержать "@" и быть похожей на адрес электронной почты')
                 return 1
             }
             if (sha512(passw) != sha512(conf)) {
                 setErConf('Пароли не одинаковые')
                 return 1
             }
-            let grades = ['detective', 'major', 'kapitan']
+            let grades = ['detective', 'kapitan']
             if (!(grades.includes(grade))) {
-                setErGrade('Звания могут быть только: detective, major, kapitan')
+                setErGrade('Звания могут быть только: detective, kapitan')
                 return 1
             }
             if (!(/^(\+7|7|8)[0-9]{10}$/.test(tel))) {
@@ -138,13 +138,12 @@ export function Registration() {
         }).then((res) => {
             setLoadReg(false);
             if (res == 0) {
-                showPopup('Вы успешно зарегистрировали детектива');
+                showPopup('Вы успешно зарегистрировали нового пользователя, надеемся, от раскроет много дел!');
                 reg(login, sha512(passw), email, tel, grade, peId, rights).then(() => {
                     setLoad(true);
                     setLogin(''); setPassw(''); setRights(''); setTel(''); setSelected({ first: false, sec: true }); setGrade('');
                     setConf(''); setEmail('');
                 });
-
             } else {
                 showPopup('Перепроверьте данные')
             }

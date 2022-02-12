@@ -124,14 +124,14 @@ export function Case() {
                                     }} w="255px" h="40px" size="15px">Закрыть дело</Btn>
                                 }
                                 <TextField type="h"><h3>Детективы:</h3></TextField>
-                                <NavLink to={`/adddetective/${id}`}><Btn disabled={info.ca_status == 'close'} w="255px" warn h="30px">Добавить детектива</Btn></NavLink>
+                                <NavLink to={`/adddetective/${id}`}><Btn disabled={info.ca_status == 'close' || user.rights == 'user'} w="255px" warn h="30px">Добавить детектива</Btn></NavLink>
                                 {info.on_case && info.on_case != 0 ?
                                     info.on_case.map((el, ind) => (
                                         <Container key={el.detectives.d_id} gap="5px">
                                             <NavLink to={`/profile/${el.detectives.d_id}`}><Btn title={info.on_case[ind].o_status == 'suspended' ? 'Отстранен' : 'В деле'} disabled={info.on_case[ind].o_status == 'suspended'} w="210px" h="40px" size="15px">
                                                 {el.detectives.people.pe_surname} {el.detectives.people.pe_name} {el.detectives.people.pe_patronymic || ''}
                                             </Btn></NavLink>
-                                            <Btn disabled={info.ca_status == 'close'} size="18px" id={el.detectives.d_id} title={info.on_case[ind].o_status == 'suspended' ? 'Вернуть к делу' : 'Отстранить'} w="40px" h="40px" onClick={(e) => {
+                                            <Btn disabled={info.ca_status == 'close' || el.detectives.d_status == 'retired' || el.detectives.d_grade == 'kapitan' || user.rights == 'user'} size="18px" id={el.detectives.d_id} title={info.on_case[ind].o_status == 'suspended' ? 'Вернуть к делу' : 'Отстранить'} w="40px" h="40px" onClick={(e) => {
                                                 if (info.on_case[ind].o_status == 'suspended') {
                                                     suspendDet(+id, el.detectives.d_id, 'on');
                                                 } else {
@@ -147,7 +147,7 @@ export function Case() {
                             </Container>
                             <Container w="255px" behav="row" gap="10px">
                                 <TextField type="h"><h3>Доказательства:</h3></TextField>
-                                <NavLink to={`/addproof/${id}/0`}><Btn disabled={info.ca_status == 'close'} w="255px" warn h="30px">Добавить улику</Btn></NavLink>
+                                <NavLink to={`/addproof/${id}/0/0`}><Btn disabled={info.ca_status == 'close'} w="255px" warn h="30px">Добавить улику</Btn></NavLink>
                                 {info.proof && info.proof != 0 ?
                                     info.proof.map((el) => (
                                         <TextField key={el.pr_id}>

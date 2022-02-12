@@ -62,7 +62,7 @@ export default function AllCases() {
                 setLoad(false);
             })
         }
-    }, []);
+    }, [load]);
 
     return (
         useAuth().isAuth ?
@@ -112,10 +112,21 @@ export default function AllCases() {
                                 <Input readOnly value={normalDate(newCase.ca_date_begin)} />
                                 <Container w="100%" gap="20px" fe="center">
                                     <Btn h="40px" size="15px" w="45%" onClick={() => {
-                                        showPopup("Дело успешно создано");
-                                        // createCase(newCase).then(res => {
-                                        //     showPo
-                                        // })
+                                        if (newCase.ca_title == '' || newCase.ca_type == '' || newCase.ca_description == '') {
+                                            showPopup('Заполните все поля')
+                                        } else {
+                                            createCase(newCase).then(res => {
+                                                showPopup("Дело успешно создано");
+                                                setModal(false);
+                                                setNewCase({
+                                                    ca_title: '',
+                                                    ca_description: '',
+                                                    ca_type: '',
+                                                    ca_date_begin: new Date().toISOString().slice(0, 10)
+                                                });
+                                                setLoad(true);
+                                            })
+                                        }
                                     }}>Открыть дело</Btn>
                                     <Btn h="40px" size="15px" w="45%" onClick={() => {
                                         setNewCase({

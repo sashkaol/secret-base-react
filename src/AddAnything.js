@@ -137,7 +137,7 @@ export function AddProof() {
     const [proof, setProof] = useState({
         pr_title: '',
         pr_description: '',
-        pr_owner_id: '',
+        pr_owner_id: null,
         pr_ca_id: +caId
     });
     const [owner, setOwner] = useState('');
@@ -159,9 +159,11 @@ export function AddProof() {
                         pr_ca_id: +caId
                     })
                     setPrId(+res[0].pr_id);
-                    let patr = res[0].people.pe_patronymic == null ? '' : res[0].people.pe_patronymic;
-                    setOwner(res[0].people.pe_surname + ' ' + res[0].people.pe_name + ' ' + patr);
-                    setSelected(res[0].people.pe_id)
+                    if (res[0].pr_owner_id != null) {
+                        let patr = res[0].people.pe_patronymic == null ? '' : res[0].people.pe_patronymic;
+                        setOwner(res[0].people.pe_surname + ' ' + res[0].people.pe_name + ' ' + patr);
+                        setSelected(res[0].people.pe_id)
+                    }
                     setLoad(false);
                 })
             } else {
@@ -184,7 +186,7 @@ export function AddProof() {
                             <Input value={proof.pr_description} type="text" placeholder="Улика уликовая" onChange={(e) => {
                                 setProof({ ...proof, pr_description: e.target.value })
                             }} />
-                            <Title>Владелец (выберите из списка ниже)</Title>
+                            <Title>Владелец (выберите из списка ниже), если его установили</Title>
                             <Input readOnly value={owner} type="text" placeholder="Владельцев Владелец Владельцевич" />
                             <Container w="100%" at="center" behav="column" gap="10px">
                                 {
@@ -208,7 +210,7 @@ export function AddProof() {
                                             setPopup('')
                                         }, 3000)
                                     });
-                                } else {
+                                } else if (proof.pr_description != '' || proof.pr_title != '') {
                                     insertProof(proof);
                                     setProof({
                                         pr_title: '',
@@ -217,6 +219,16 @@ export function AddProof() {
                                         pr_ca_id: +caId
                                     })
                                     setOwner('');
+                                    setPopup('Данные добавлены');
+                                    setTimeout(() => {
+                                        setPopup('')
+                                    }, 3000);
+                                    setSelected('');
+                                } else {
+                                    setPopup('Все поля должны быть заполнены');
+                                    setTimeout(() => {
+                                        setPopup('')
+                                    }, 3000);
                                 }
                             }}>{corr == 1 ? 'Обновить' : 'Добавить'}</Btn>
                             <Popup none={!popup}>{popup}</Popup>
@@ -236,6 +248,7 @@ const getDets = async (arr) => {
         .select('*, people(*)')
         .not('d_id', 'in', arr)
         .neq('d_grade', 'kapitan')
+        .eq('d_status', 'working')
     return data || error
 }
 
@@ -327,12 +340,12 @@ const getOnCaseDets = async (caId) => {
     let { data, error } = await supabase
         .from('on_case')
         .select('*, detectives (*, people(*))')
-        .eq('o_ca_id', caId);
+        .eq('o_ca_id', caId)
     return data || error
 }
 
 const insertTestimony = async (obj) => {
-    let {data, error} = await supabase
+    let { data, error } = await supabase
         .from('testimony')
         .insert([obj])
     return data || error
@@ -390,7 +403,7 @@ export function AddTestimony() {
                                     {
                                         dets ?
                                             dets.map(el => (
-                                                <Btn w="100%" h="30px" key={el.o_id} selected={selected == el.o_id} onClick={() => {
+                                                <Btn w="100%" h="30px" key={el.o_id} selected={selected == el.o_id} disabled={el.detectives.d_status == 'retired'} onClick={() => {
                                                     setSelected(el.o_id);
                                                     setDetName(el.detectives.people.pe_surname + ' ' + el.detectives.people.pe_name + ' ' + (el.detectives.people.pe_patronymic || ''));
                                                     setTestimony({ ...testimony, t_o_id: el.o_id })
