@@ -171,22 +171,22 @@ export function Registration() {
                         }
                     </Container>
                     <Container w="250px" gap="20px" behav="column">
-                        <Input placeholder="KBecks" type="text" onChange={(e) => {
+                        <Input value={login} placeholder="KBecks" type="text" onChange={(e) => {
                             setLogin(e.target.value);
                         }} />
-                        <Input placeholder="89612704567" type="tel" onChange={(e) => {
+                        <Input value={tel} placeholder="89612704567" type="tel" onChange={(e) => {
                             setTel(e.target.value);
                         }} />
-                        <Input placeholder="KBecks@gmail.com" type="email" onChange={(e) => {
+                        <Input value={email} placeholder="KBecks@gmail.com" type="email" onChange={(e) => {
                             setEmail(e.target.value);
                         }} />
-                        <Input placeholder="detective" type="text" onChange={(e) => {
+                        <Input value={grade} placeholder="detective" type="text" onChange={(e) => {
                             setGrade(e.target.value);
                         }} />
-                        <Input placeholder="your password" type="password" onChange={(e) => {
+                        <Input value={passw} placeholder="your password" type="password" onChange={(e) => {
                             setPassw(e.target.value);
                         }} />
-                        <Input placeholder="your password" type="password" onChange={(e) => {
+                        <Input value={conf} placeholder="your password" type="password" onChange={(e) => {
                             setConf(e.target.value);
                         }} />
                         <Container w="250px" gap="10px" behav="row">
