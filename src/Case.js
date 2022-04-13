@@ -114,9 +114,9 @@ export function Case() {
                                 <TextField><b>Открыто:</b> {normalDate(info.ca_date_begin)}</TextField>
                                 {
                                     info.ca_date_end &&
-                                    <TextField><b>Закрыто:</b> {normalDate(info.ca_date_end)}</TextField>
+                                    <TextField><b>Закрыто или что-то произошло, чем бы оно ни было:</b> {normalDate(info.ca_date_end)}</TextField>
                                 }
-                                <TextField><b>Статус:</b> {info.ca_status == 'open' ? 'открыто' : 'закрыто'}</TextField>
+                                <TextField><b>Статус:</b> {info.ca_status == 'open' ? 'открыто' : info.ca_status == 'TAKENAWAY' ? user.login != 'federal' ? 'У ФЕДЕРАЛОВ, РАБОТАЙТЕ НА СВОЙ СТРАХ И РИСК' : 'У НАС :)' : 'закрыто'}</TextField>
                                 {
                                     user.rights == 'admin' && info.ca_status == 'open' &&
                                     <Btn onClick={() => {
@@ -207,8 +207,17 @@ export function Case() {
                                     <TextField>Нет данных</TextField>
                                 }
                             </Container>
-                            <Container w="255px">
+                            <Container gap="10px" w="255px">
                                 <NavLink to="/allcases"><Btn size="15px" w="255px" h="40px">К делам</Btn></NavLink>
+                                <NavLink to={`/allcases/${id}/caseline`}><Btn size="15px" w="255px" h="40px">Линия расследования</Btn></NavLink>
+                                <NavLink to={`/allcases/${id}/casemapa`}><Btn size="15px" w="255px" h="40px">Карта</Btn></NavLink>
+                                {
+                                    user.login == 'federal' &&
+                                    <Btn disabled={info.ca_status == 'TAKENAWAY' || info.ca_status == 'close'} onClick={() => {
+                                        updateCase(info.ca_id, { ca_status: 'TAKENAWAY', ca_date_end: new Date() })
+                                    }}
+                                        fed size="15px" w="255px" h="40px"><b>ЗАБРАТЬ ДЕЛО</b></Btn>
+                                }
                             </Container>
                         </Container>
                         <Container>

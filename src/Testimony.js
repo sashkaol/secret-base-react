@@ -99,7 +99,7 @@ export function Testimony() {
                                 <Title>Детектив:</Title>
                                 <TextField>{data.on_case.detectives.people.pe_surname} {data.on_case.detectives.people.pe_name} {data.on_case.detectives.people.pe_patronymic || ''}</TextField>
                                 {
-                                    status == 'open' ?
+                                    status != 'close' ?
                                     <Btn w="250px" h="30px" onClick={() => setCorr(0)}>Редактировать</Btn>
                                     :
                                     <TextField>Дело закрыто, вы не можете менять показания</TextField>

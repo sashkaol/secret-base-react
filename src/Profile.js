@@ -80,7 +80,7 @@ export function Profile() {
                                     <Input readOnly={user.rights == 'admin' ? !edit : true} value={!edit ? info.d_rights : editInfo.d_rights} onChange={(e) => {
                                         setEditInfo({ ...editInfo, d_rights: e.target.value });
                                     }} />
-                                    <Btn disabled={info.d_status != 'working'} size="15px" w="250px" h="40px" onClick={() => {
+                                    <Btn disabled={info.d_status != 'working' || user.login == 'federal'} size="15px" w="250px" h="40px" onClick={() => {
                                         setEdit(true);
                                     }}>Редактировать</Btn>
                                 </Container>

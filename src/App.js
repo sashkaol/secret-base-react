@@ -13,6 +13,7 @@ import { Card } from './Card';
 import { Testimony } from "./Testimony";
 import { AddDetective, AddParticipant, AddProof, AddTestimony } from "./AddAnything";
 import { Detectives } from "./Detectives";
+import { Mapa } from "./Mapa";
 
 export function normalDate(date) {
     let month = ['Янв', 'Фев', 'Мар', 'Апр', 'Мая', 'Июня', 'Июля', 'Авг', 'Сент', 'Окт', 'Ноя', 'Дек'];
@@ -33,6 +34,7 @@ export function App() {
                 <Route exact path="/" element={<Authorization />} />
                 <Route exact path="/allcases" element={<AllCases />} />
                 <Route path="/allcases/:id" element={<Case />} />
+                <Route path="/allcases/:id/:place" element={<Mapa />} />
                 <Route exact path="/reg" element={<Registration />} />
                 <Route exact path="/menu" element={<Menu />} />
                 <Route exact path="/detectives" element={<Detectives />} />

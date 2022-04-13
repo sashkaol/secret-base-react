@@ -17,7 +17,7 @@ export function Menu() {
                         }
                         <Link to="/detectives"><Btn size="15px" w="250px" h="40px">Состав участка</Btn></Link>
                         <Link to="/allcases"><Btn size="15px" w="250px" h="40px">Дела</Btn></Link>
-                        <Link to="/search"><Btn size="15px" w="250px" h="40px">База данных</Btn></Link>
+                        <Link to={user.login == 'federal' ? "/database" : "/search"}><Btn size="15px" w="250px" h="40px">База данных</Btn></Link>
                     </Container>
                     :
                     <Navigate to="/" replace />

@@ -84,7 +84,7 @@ export default function AllCases() {
                                 <br />
                                 <p>{el.ca_title || el.cases.ca_title}</p>
                                 <br />
-                                <p>{(el.ca_status || el.cases.ca_status) == 'open' ? 'открыто' : 'закрыто'}</p>
+                                <p>{(el.ca_status || el.cases.ca_status) == 'open' ? 'открыто' : (el.ca_status || el.cases.ca_status) == 'TAKENAWAY' ? 'ЗАБРАЛИ ФЕДЕРАЛЫ' : 'закрыто'}</p>
                                 <NavLink to={`/allcases/${el.ca_id || el.cases.ca_id}`}><Overlay /></NavLink>
                             </CaseBook>
                         ))
