@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from './SupaBase';
 import { normalDate } from './App';
-import { Container, HighContainer, TextField, Title, Loading, Input, Btn, TextArea, Popup } from './styles/styles';
+import { Container, HighContainer, TextField, Title, Loading, Input, Btn, TextArea, Popup, Warning, Voile } from './styles/styles';
 
 const getTestimony = async (idT) => {
     let { data, error } = await supabase
@@ -60,6 +60,7 @@ export function Testimony() {
     });
     const [load, setLoad] = useState(true);
     const [corr, setCorr] = useState(1);
+    const [modal, showModal] = useState(false);
     useEffect(() => {
         getTestimony(id).then(res => {
             setData(res[0]);
@@ -100,27 +101,31 @@ export function Testimony() {
                                 <TextField>{data.on_case.detectives.people.pe_surname} {data.on_case.detectives.people.pe_name} {data.on_case.detectives.people.pe_patronymic || ''}</TextField>
                                 {
                                     status != 'close' ?
-                                    <Btn w="250px" h="30px" onClick={() => setCorr(0)}>Редактировать</Btn>
-                                    :
-                                    <TextField>Дело закрыто, вы не можете менять показания</TextField>
+                                        <Btn w="250px" h="30px" onClick={() => setCorr(0)}>Редактировать</Btn>
+                                        :
+                                        <TextField>Дело закрыто, вы не можете менять показания</TextField>
                                 }
                                 {
                                     !corr &&
-                                    <Container gap="10px">
-                                        <Btn w="120px" onClick={() => {
-                                            setNewData({
-                                                t_date: data.t_date,
-                                                t_time: data.t_time,
-                                                t_text: data.t_text
-                                            })
-                                            setCorr(1)
-                                        }}>Отменить изменения</Btn>
-                                        <Btn w="120px" onClick={() => {
-                                            updateTestimony(id, newData).then(res => {
-                                                showPopup('Данные успешно изменены');
-                                                setLoad(true)
-                                            })
-                                        }}>Сохранить изменения</Btn>
+                                    <Container gap="5px">
+                                        <Btn onClick={() => { showModal(true) }} h="30px" w="100%">Добавить метку времени</Btn>
+                                        <Container gap="10px">
+                                            <Btn h="30px" w="120px" onClick={() => {
+                                                setNewData({
+                                                    t_date: data.t_date,
+                                                    t_time: data.t_time,
+                                                    t_text: data.t_text
+                                                })
+                                                setCorr(1);
+                                                showModal(false);
+                                            }}>Отменить изменения</Btn>
+                                            <Btn h="30px" w="120px" onClick={() => {
+                                                updateTestimony(id, newData).then(res => {
+                                                    showPopup('Данные успешно изменены');
+                                                    setLoad(true)
+                                                })
+                                            }}>Сохранить изменения</Btn>
+                                        </Container>
                                     </Container>
                                 }
                             </Container>
@@ -131,6 +136,25 @@ export function Testimony() {
                                 }} size="15px" readOnly={corr} texta={!corr ? "400px" : 'max-content'} value={newData.t_text} />
                             </Container>
                             <Popup none={!popup}>{popup}</Popup>
+                            {modal &&
+                                <Warning>
+                                    <Container gap="10px">
+                                        <Title light>Место</Title>
+                                        <Input placeholder="Московский театр РАМТ" />
+                                        <Title light>Пояснения</Title>
+                                        <TextArea placeholder="Был и был, чего бубнить-то" />
+                                        <Title light>Дата и время</Title>
+                                        <Input type="datetime-local" />
+                                        <Container w="100%" gap="20px" fe="center">
+                                            <Btn w="250px" h="40px" size="16px">Добавить</Btn>
+                                            <Btn w="250px" h="40px" size="16px" onClick={() => {
+                                                showModal(false);
+                                            }}>Отменить</Btn>
+                                        </Container>
+                                    </Container>
+                                </Warning>
+                            }
+                            {modal && <Voile />}
                         </Container>
                         :
                         <Loading>&#8987;</Loading>

@@ -77,11 +77,11 @@ export const Btn = styled.button`
     }
 `
 export const TextField = styled.div`
-    box-shadow: -2px -2px 0px 0px ${props => props.type ? '#F5EEDC' : '#4F091D' };
-    background-color: ${props => props.type ? '#4F091D' : '#F5EEDC' };
-    color: ${props => props.type ? '#F5EEDC' : '#4F091D' };
+    box-shadow: -2px -2px 0px 0px ${props => props.type ? '#F5EEDC' : '#4F091D'};
+    background-color: ${props => props.type ? '#4F091D' : '#F5EEDC'};
+    color: ${props => props.type ? '#F5EEDC' : '#4F091D'};
     width: ${props => props.w ? props.w : '100%'};
-    height: ${props => props.h ? props.h :  'max-content'};
+    height: ${props => props.h ? props.h : 'max-content'};
     min-height: 40px;
     font-size: 16px;
     padding: 10px;
@@ -195,3 +195,149 @@ export const Voile = styled.div`
   height: 100vh;
   opacity: 0.9;
 `
+export const Relative = styled.div`
+  position: relative;
+`
+
+export const StyleNote = styled.div`
+  color: #4F091D;
+  background-color: #F5EEDC;
+  padding: 10px;
+  width: 100px;
+  height: max-content;
+  position: absolute;
+  top: ${props => props.y}px;
+  left: ${props => props.x}px;
+  transform: rotate(${props => props.rotate});
+`
+
+export const Line = styled.ul`
+position: relative;
+margin: 0 0 0px 0;
+padding: 0;
+list-style: none;
+display: flex;
+flex-direction: column;
+gap: 20px;
+&:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: -10px;
+  width: 2px;
+  background: #4F091D;
+  left: 25px;
+  border-radius: 2px;
+}
+`
+export const LineUl = styled.ul`
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+`
+export const LineLabel = styled.span`
+        font-weight: 600;
+          padding: 5px 10px;
+          display: inline-block;
+          background-color: #DD4A48;
+          color: #F5EEDC;
+          font-size: 14px;
+          box-shadow: 3px 3px 0px 0px #F5EEDC;
+          position: relative;
+          z-index: 5;
+          width: 100px;
+`
+export const LineContainer = styled.div`
+display: flex;
+flex-direction: column;
+gap: 20px;
+`
+export const LineItem = styled.li`
+    font-weight: 500;
+    padding: 5px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background-color: #F5EEDC;
+    color: #DD4A48;
+    font-size: 14px;
+    box-shadow: 1px 1px 0px 0px #DD4A48;
+    width: 100%;
+    div {
+        display: flex;
+        justify-content: space-between;
+    }
+`
+/*.time-line-ctnr {
+    .time-line {
+      position: relative;
+      margin: 0 0 0px 0;
+      padding: 0;
+      list-style: none;
+      &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: -10px;
+        width: 2px;
+        background: #3498db;
+        left: 32px;
+        border-radius: 2px;
+      }
+      > .time-label {
+        > span {
+          font-weight: 600;
+          padding: 5px 10px;
+          display: inline-block;
+          background-color: #e74c3c;
+          color: #fff;
+          border-radius: 2px;
+          font-size: 14px;
+        }
+      }
+      > li {
+        position: relative;
+        margin-bottom: 10px;
+        margin-right: 0;
+        > .time-line-item {
+          -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+          border-radius: 3px;
+          background: #fff;
+          color: #444;
+          margin-right: 15px;
+          position: relative;
+          margin-left: 50px;
+          > .time-line-header,
+          .time {
+            font-size: 14px;
+            padding: 6px 10px;
+          }
+          .time {
+            font-size: 12px;
+            color: #999;
+            float: right;
+          }
+          .time-line-header {
+            margin: 0;
+            color: #555;
+            border-bottom: 1px solid #f4f4f4;
+            line-height: 1.1;
+          }
+        }
+        > .fa {
+          position: absolute;
+          border-radius: 50%;
+          width: 10px;
+          height: 10px;
+          color: #666;
+          background: #ecf0f1;
+          left: 28px;
+          top: 9px;
+          border: 2px solid #3498db;
+          display: inline-block;
+          box-sizing: border-box;
+        }
+      }
+    }
+  }*/

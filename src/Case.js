@@ -211,6 +211,7 @@ export function Case() {
                                 <NavLink to="/allcases"><Btn size="15px" w="255px" h="40px">К делам</Btn></NavLink>
                                 <NavLink to={`/allcases/${id}/caseline`}><Btn size="15px" w="255px" h="40px">Линия расследования</Btn></NavLink>
                                 <NavLink to={`/allcases/${id}/casemapa`}><Btn size="15px" w="255px" h="40px">Карта</Btn></NavLink>
+                                <NavLink to={`/allcases/${id}/casedesk`}><Btn size="15px" w="255px" h="40px">П(очти)робковая доска</Btn></NavLink>
                                 {
                                     user.login == 'federal' &&
                                     <Btn disabled={info.ca_status == 'TAKENAWAY' || info.ca_status == 'close'} onClick={() => {
